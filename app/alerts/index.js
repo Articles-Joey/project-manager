@@ -1,7 +1,8 @@
 'use client';
 
 import { useProjects } from '@/components/hooks/useProjects';
-import { useState } from 'react';
+import AlertItem from '@/components/UI/AlertItem';
+import { useMemo, useState } from 'react';
 import { Button } from 'react-bootstrap';
 
 import 'styles/pages/alerts.scss';
@@ -11,18 +12,65 @@ export default function Alerts() {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSeverities, setSelectedSeverities] = useState([]);
 
+    const alerts = useMemo(() => {
+        let allAlerts = [];
+        packages.forEach(pkg => {
+            const vulnerabilities = pkg?.["project-manager-am-metadata"]?.audit?.vulnerabilities;
+            if (vulnerabilities) {
+                const vulnsArray = Array.isArray(vulnerabilities)
+                    ? vulnerabilities
+                    : Object.values(vulnerabilities);
+
+                const mappedVulns = vulnsArray.map(v => ({
+                    ...v,
+                    parent_project: pkg.name || pkg._folderName,
+                    _pkg: pkg
+                }));
+                allAlerts = [...allAlerts, ...mappedVulns];
+            }
+        });
+        return allAlerts;
+    }, [packages]);
+
+    const filteredAlerts = alerts.filter(alert => {
+        const matchesSearch = (
+            alert.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            alert.parent_project.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (alert.via && Array.isArray(alert.via) && alert.via.some(v => typeof v === 'object' && v.title && v.title.toLowerCase().includes(searchTerm.toLowerCase())))
+        );
+        const matchesSeverity = selectedSeverities.length === 0 || selectedSeverities.includes(alert.severity);
+        return matchesSearch && matchesSeverity;
+    });
+
     if (isLoading) return <div>Loading...</div>;
     if (isError) return <div>Error loading packages</div>;
-
-    const filteredPackages = packages.filter(pkg => {
-        const name = pkg?.name || pkg._folderName || '';
-        return name.toLowerCase().includes(searchTerm.toLowerCase());
-    });
 
     return (
         <div className='alerts-page'>
 
             <div className='side-menu'>
+
+                <div className='mb-3'>
+                    <h3>Display By</h3>
+                    {['Vulnerability', 'Project'].map((severity) => (
+                        <Button
+                            key={severity}
+                            variant="secondary"
+                            disabled
+                            className="d-block w-100 mb-2 text-capitalize"
+                            onClick={() => {
+                                setSelectedSeverities(prev =>
+                                    prev.includes(severity)
+                                        ? prev.filter(s => s !== severity)
+                                        : [...prev, severity]
+                                );
+                            }}
+                        >
+                            {severity}
+                        </Button>
+                    ))}
+                </div>
+
                 <h3>Filter by Severity</h3>
                 {['info', 'low', 'moderate', 'high', 'critical'].map((severity) => (
                     <Button
@@ -44,11 +92,11 @@ export default function Alerts() {
 
             <div className='content'>
 
-                <h1>Alerts ({packages.length})</h1>
+                <h1>Alerts ({filteredAlerts.length})</h1>
 
                 <input
                     type="text"
-                    placeholder="Search packages..."
+                    placeholder="Search alerts..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     style={{
@@ -70,49 +118,13 @@ export default function Alerts() {
                     }}
                 >
 
-                    {filteredPackages.map((pkg) => {
+                    {filteredAlerts.map((alert, i) => {
                         return (
-                            <div key={pkg._folderPath} style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', background: '#222' }}>
-                                <h2 style={{ marginTop: 0 }}>{pkg?.name || pkg._folderName}</h2>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                                    <div><strong>Severity:</strong> {pkg.version || '0.0.0'}</div>
-                                    {/* <div><strong>Date:</strong> {new Date(pkg._mtime).toLocaleString()}</div>
-                                <div><strong>Author:</strong> {pkg.author || 'Unknown'}</div>
-                                <div><strong>React:</strong> {reactVersion}</div>
-                                <div><strong>Next.js:</strong> {nextVersion}</div> */}
-                                </div>
-                                {/* <Button
-                                variant="dark"
-                                className='border mt-2'
-                                onClick={() => {
-                                    fetch(`/api/audit?path=${encodeURIComponent(pkg._folderPath)}`, {
-                                        method: 'GET',
-                                        // query: {
-                                        //     path: pkg._folderPath
-                                        // }
-                                    })
-                                }}
-                            >
-                                Audit
-                            </Button>
-                            <Button
-                                variant="dark"
-                                className='border mt-2'
-                                onClick={() => {
-                                    fetch(`/api/open-folder?path=${encodeURIComponent(pkg._folderPath)}`, {
-                                        method: 'GET',
-                                        // query: {
-                                        //     path: pkg._folderPath
-                                        // }
-                                    })
-                                }}
-                            >
-                                Open Folder
-                            </Button>
-                            <div style={{ marginTop: '10px', fontSize: '0.8em', color: '#888', wordBreak: 'break-all' }}>
-                                {pkg._folderPath}
-                            </div> */}
-                            </div>
+                            <AlertItem
+                                key={`${alert.parent_project}-${alert.name}-${i}`}
+                                alert={alert}
+                                index={i}
+                            />
                         );
                     })}
                 </div>

@@ -1,5 +1,27 @@
 {
-  "version_used": "0.0.1",
-  "last_audit": "2025-12-04T15:19:37.031Z",
-  "about": "Metadata used by project-manager.articles.media"
+  "version_used": "0.0.2",
+  "about": "Metadata used by project-manager.articles.media",
+  "audit": {
+    "auditReportVersion": 2,
+    "vulnerabilities": {},
+    "metadata": {
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      },
+      "dependencies": {
+        "prod": 150,
+        "dev": 368,
+        "optional": 161,
+        "peer": 87,
+        "peerOptional": 0,
+        "total": 569
+      }
+    },
+    "last_audit": "2025-12-04T18:06:33.144Z"
+  }
 }

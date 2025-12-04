@@ -5,6 +5,8 @@ import packageJson from 'package.json';
 import { Button } from "react-bootstrap";
 import { useStore } from "../hooks/useStore";
 
+import ScrollToTopButton from '@/components/UI/ScrollToTopButton';
+
 export default function Navbar() {
 
     const setShowSettingsModal = useStore((state) => state.setShowSettingsModal);
@@ -34,7 +36,8 @@ export default function Navbar() {
 
             </Link>
 
-            <div>
+            <div className="d-flex">
+                <ScrollToTopButton />
                 <Button
                     variant="articles"
                     onClick={() => {

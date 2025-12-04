@@ -1,8 +1,8 @@
-# Package Browser
+# Node Project Manager
 
 ![Preview](/public/img/preview.webp)
 
-An easier way to manage and view all your package.json across multiple projects.
+An easier way to manage and view all your NPM projects.
 
 ## Features
 
@@ -31,7 +31,8 @@ npm run dev
 - Outdated package alerts
 - Remote project monitoring
 - Apply package update commits via GUI
-- Dynamic UI depending on project frameworks
+- Linux Support
+- Audit stats history
 
 ## Credits
 

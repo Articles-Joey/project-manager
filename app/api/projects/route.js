@@ -58,13 +58,32 @@ export async function GET(request) {
               // ignore if file doesn't exist
             }
 
+            // Try to read README.md for preview image
+            let thumbnail = null;
+            try {
+              const readmePath = path.join(currentPath, dir?.name, 'README.md');
+              const readmeContent = await fs.readFile(readmePath, 'utf-8');
+              const previewMatch = readmeContent.match(/!\[[^\]]*?(?:Game|Site|Preview)[^\]]*?\]\((.*?)\)/i);
+              if (previewMatch && previewMatch[1]) {
+                 let imagePath = previewMatch[1];
+                 if (imagePath.startsWith('/') || imagePath.startsWith('\\')) {
+                   imagePath = imagePath.substring(1);
+                 }
+                 const fullPath = path.join(currentPath, dir?.name, imagePath);
+                 thumbnail = `/api/image?path=${encodeURIComponent(fullPath)}`;
+              }
+            } catch (e) {
+              // ignore
+            }
+
             // Add extra info if needed, like the folder path
             projects.push({
               ...packageJson,
               "project-manager-am-metadata": metadata,
               _folderPath: path.join(currentPath, dir?.name),
               _folderName: dir?.name,
-              _mtime: stats.mtime
+              _mtime: stats.mtime,
+              thumbnail
             });
           } catch (err) {
             // Ignore folders without package.json or with invalid JSON

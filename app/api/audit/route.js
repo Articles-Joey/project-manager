@@ -37,9 +37,12 @@ export async function GET(request) {
 
             // Define metadata
             const metadata = {
-                version_used: currentPackage.version,
-                last_audit: new Date().toISOString(),
-                about: "Metadata used by project-manager.articles.media"
+                version_used: currentPackage.version,                
+                about: "Metadata used by project-manager.articles.media",
+                audit: {
+                    ...JSON.parse(output),
+                    last_audit: new Date().toISOString(),
+                }
             };
 
             // Write to project-manager-am.json

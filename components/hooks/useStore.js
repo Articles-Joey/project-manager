@@ -51,6 +51,9 @@ export const useStore = create()(
       additionalFolderLocations: [],
       setAdditionalFolderLocations: (value) => set({ additionalFolderLocations: value }),
 
+      activeProject: null,
+      setActiveProject: (value) => set({ activeProject: value }),
+
     }),
     {
       name: 'project-manager-storage', // name of the item in the storage (must be unique)

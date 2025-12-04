@@ -19,6 +19,8 @@ import { Suspense } from 'react';
 import Navbar from '@/components/UI/Navbar';
 import SensitiveModeHandler from '@/components/UI/SensitiveModeHandler';
 import InitialMetadataKeyCheck from '@/components/UI/InitialMetadataKeyCheck';
+import ProjectModal from '@/components/UI/ProjectModal';
+
 // import CustomControlsLogic from '@/components/Game/CustomControlsLogic';
 // import dynamic from 'next/dynamic';
 
@@ -39,8 +41,8 @@ import InitialMetadataKeyCheck from '@/components/UI/InitialMetadataKeyCheck';
 // )
 
 export const metadata = {
-  title: "Package Browser",
-  description: "Browse and manage your packages with ease and efficiency.",
+  title: "Project Manager",
+  description: "Browse and manage your NPM projects with ease and efficiency.",
 };
 
 export default function RootLayout({ children }) {
@@ -74,6 +76,7 @@ export default function RootLayout({ children }) {
           <SensitiveModeHandler />
           <GlobalClientModals />
           <InitialMetadataKeyCheck />
+          <ProjectModal />
         </Suspense>
 
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>

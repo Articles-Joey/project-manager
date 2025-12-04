@@ -1,5 +1,4 @@
 .projects-page {
-
     display: flex;
 
     .side-menu {
@@ -7,6 +6,9 @@
         width: 300px;
         border-right: 1px solid #ccc;
         padding: 20px;
+        position: sticky;
+        top: 50px;
+        left: 0;
     }
 
     .content {

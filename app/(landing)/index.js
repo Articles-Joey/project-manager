@@ -140,7 +140,7 @@ export default function LandingPage() {
                             Settings
                         </ArticlesButton>
 
-                        <a className='w-50' target='_blank' href='https://github.com/Articles-Joey/package-browser'>
+                        <a className='w-50' target='_blank' href='https://github.com/Articles-Joey/project-manager'>
                             <ArticlesButton
                                 className={`w-100`}
                                 small
