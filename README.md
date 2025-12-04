@@ -1,0 +1,42 @@
+# Package Browser
+
+![Preview](/public/img/preview.webp)
+
+An easier way to manage and view all your package.json across multiple projects.
+
+## Features
+
+- GUI to manage all your projects that are using NPM
+- Audit packages easier
+- Easily identify vulnerabilities
+
+## Getting Started
+
+First install
+
+```bash
+npm i
+```
+
+Then run the development server:
+
+```bash
+npm run dev
+```
+
+## Roadmap
+
+- Internal out of date per package database so all packages don't need to be scanned.
+- Security advisory alerts
+- Outdated package alerts
+- Remote project monitoring
+- Apply package update commits via GUI
+- Dynamic UI depending on project frameworks
+
+## Credits
+
+Lead Developer - [Articles-Joey](https://github.com/Articles-Joey)
+
+## Sponsors
+
+[Articles Media](https://articles.media) - ...

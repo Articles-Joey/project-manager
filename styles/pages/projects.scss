@@ -1,0 +1,17 @@
+.projects-page {
+
+    display: flex;
+
+    .side-menu {
+        height: calc(100vh - 50px);
+        width: 300px;
+        border-right: 1px solid #ccc;
+        padding: 20px;
+    }
+
+    .content {
+        flex: 1;
+        padding: 20px;
+    }
+
+}

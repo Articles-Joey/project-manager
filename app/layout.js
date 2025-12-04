@@ -1,0 +1,93 @@
+// import { Geist, Geist_Mono } from "next/font/google";
+
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import theme from '@/components/theme';
+
+import "bootstrap/dist/css/bootstrap.min.css";
+
+// import "./globals.css";
+import "@/styles/index.scss";
+// import SocketLogicHandler from "@/components/SocketLogicHandler";
+// import PeerHandler from '@/components/PeerHandler';
+// import AudioHandler from '@/components/AudioHandler';
+// import PeerHandlerTest from '@/components/PeerHandlerTest';
+import GlobalClientModals from '@/components/UI/GlobalClientModals';
+import DarkModeHandler from '@/components/UI/DarkModeHandler';
+import { Suspense } from 'react';
+import Navbar from '@/components/UI/Navbar';
+import SensitiveModeHandler from '@/components/UI/SensitiveModeHandler';
+import InitialMetadataKeyCheck from '@/components/UI/InitialMetadataKeyCheck';
+// import CustomControlsLogic from '@/components/Game/CustomControlsLogic';
+// import dynamic from 'next/dynamic';
+
+// const geistSans = Geist({
+//   variable: "--font-geist-sans",
+//   subsets: ["latin"],
+// });
+
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+// });
+
+// import InfoModal from '@/components/UI/InfoModal';
+// const InfoModal = dynamic(
+//     () => import('@/components/UI/InfoModal'),
+//     { ssr: false }
+// )
+
+export const metadata = {
+  title: "Package Browser",
+  description: "Browse and manage your packages with ease and efficiency.",
+};
+
+export default function RootLayout({ children }) {
+
+  return (
+    <html lang="en">
+
+      <head>
+
+        <link
+          rel="stylesheet"
+          href={`${process.env.NEXT_PUBLIC_CDN}fonts/fontawsome/css/all.min.css`}
+        />
+
+      </head>
+
+      <body
+      // className={`${geistSans.variable} ${geistMono.variable}`}
+      >
+
+        {/* <SocketLogicHandler /> */}
+        {/* <PeerHandler /> */}
+        {/* <PeerHandlerTest /> */}
+        {/* <AudioHandler /> */}
+        {/* <CustomControlsLogic /> */}
+
+        <Navbar />
+
+        <Suspense>
+          <DarkModeHandler />
+          <SensitiveModeHandler />
+          <GlobalClientModals />
+          <InitialMetadataKeyCheck />
+        </Suspense>
+
+        <AppRouterCacheProvider options={{ enableCssLayer: true }}>
+          <ThemeProvider theme={theme}>
+
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+
+            {children}
+
+          </ThemeProvider>
+        </AppRouterCacheProvider>
+
+      </body>
+    </html>
+  );
+}

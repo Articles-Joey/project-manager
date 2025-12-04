@@ -1,0 +1,15 @@
+.alerts-page {
+    display: flex;
+
+    .side-menu {
+        width: 300px;
+        border-right: 1px solid #ccc;
+        padding: 20px;
+    }
+
+    .content {
+        flex: 1;
+        padding: 20px;
+    }
+
+}
