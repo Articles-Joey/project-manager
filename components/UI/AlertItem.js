@@ -16,14 +16,15 @@ export default function AlertItem({
     return (
         <div 
             style={{ 
-                border: '1px solid #ccc', 
-                padding: '15px', 
-                borderRadius: '8px', 
-                background: '#222',
+                // border: '1px solid #ccc', 
+                // padding: '15px', 
+                // borderRadius: '8px', 
+                // background: '#222',
                 display: 'flex', 
                 flexDirection: 'column',
                 height: '100%'
             }}
+            className="card card-articles border shadow-sm p-3"
         >
             <div className="d-flex justify-content-between align-items-start mb-2">
                 <h2 style={{ marginTop: 0, fontSize: '1.25rem', wordBreak: 'break-all' }}>{alert.name}</h2>

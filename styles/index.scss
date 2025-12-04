@@ -58,3 +58,16 @@ button {
 .cursor-pointer {
     cursor: pointer;
 }
+
+.card-header, .btn, button, h1, h2, h3, h4, h5, h6 {
+    // font: var(--my-font-poppins);
+    font-family: var(--my-font-poppins), sans-serif;
+}
+
+body {
+    font-family: var(--my-font-arimo), sans-serif;
+}
+
+.bg-articles {
+    background-color: var(--articles-primary) !important;
+}

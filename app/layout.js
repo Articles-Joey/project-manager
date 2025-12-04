@@ -1,4 +1,19 @@
 // import { Geist, Geist_Mono } from "next/font/google";
+import { Arimo, Poppins } from 'next/font/google'
+
+// If loading a variable font, you don't need to specify the font weight
+const arimo = Arimo({
+  subsets: ['latin'],
+  // weight: ['400'],
+  display: 'swap',
+  variable: '--my-font-arimo'
+})
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['600', '700'],
+  display: 'swap',
+  variable: '--my-font-poppins'
+})
 
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { ThemeProvider } from '@mui/material/styles';
@@ -48,14 +63,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
 
   return (
-    <html lang="en">
+    <html lang="en" className={`${arimo.variable} ${poppins.variable}`}>
 
       <head>
 
-        <link
+        {process.env.NEXT_PUBLIC_CDN && <link
           rel="stylesheet"
           href={`${process.env.NEXT_PUBLIC_CDN}fonts/fontawsome/css/all.min.css`}
-        />
+        />}
 
       </head>
 

@@ -25,7 +25,8 @@
     "react-dom": "^19.2.1",
     "react-hotkeys-hook": "^5.1.0",
     "sass": "^1.94.2",
-    "swr": "^2.3.7"
+    "swr": "^2.3.7",
+    "zustand": "^5.0.9"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

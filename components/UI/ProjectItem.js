@@ -26,7 +26,7 @@ function PackageOverview({ name, pkg, version }) {
             }
         >
 
-            <div>
+            <div className="border p-1">
                 {name === 'React' &&
                     <img width={50} height={50} src={'img/package-logos/React.svg'}></img>
                 }
@@ -51,6 +51,9 @@ function PackageOverview({ name, pkg, version }) {
                 {name === 'Gulp' &&
                     <img width={50} height={50} src={'img/package-logos/Gulp.svg'}></img>
                 }
+                {name === 'MongoDB' &&
+                    <img width={50} height={50} src={'img/package-logos/MongoDB.svg'}></img>
+                }
             </div>
 
         </OverlayTrigger>
@@ -69,6 +72,7 @@ export default function ProjectItem({
     const nuxtVersion = pkg.dependencies?.nuxt || pkg.devDependencies?.nuxt || false;
     const socketIoVersion = pkg.dependencies?.['socket.io'] || pkg.devDependencies?.['socket.io'] || false || pkg.dependencies?.['socket.io-client'] || pkg.devDependencies?.['socket.io-client'] || false;
     const gulpVersion = pkg.dependencies?.gulp || pkg.devDependencies?.gulp || false;
+    const mongoDBVersion = pkg.dependencies?.mongodb || pkg.devDependencies?.mongodb || false;
 
     const setActiveProject = useStore(state => state.setActiveProject);
 
@@ -77,7 +81,10 @@ export default function ProjectItem({
     const equalVersion = pkg["project-manager-am-metadata"]?.version_used === packageJson?.version;
 
     return (
-        <div key={pkg._folderPath} style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', background: '#222' }}>
+        <div
+            key={pkg._folderPath}
+            className="card card-articles border shadow-sm p-3"
+        >
 
             {pkg.thumbnail &&
                 <div className="ratio ratio-16x9 bg-black" style={{ marginBottom: '10px', overflow: 'hidden', borderRadius: '5px' }}>
@@ -93,20 +100,22 @@ export default function ProjectItem({
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
 
-                <div><strong>Version:</strong> {pkg?.version || '?'}</div>
-                <div className="sensitiveMode-blur"><strong>Description:</strong> {pkg?.description || 'No description available'}</div>
-                <div className="sensitiveMode-blur"><strong>Date:</strong> {new Date(pkg?._mtime)?.toLocaleString()}</div>
-                <div><strong>Author:</strong> {pkg?.author?.name ? pkg?.author?.name : pkg?.author ? pkg?.author : 'Unknown'}</div>
-                <div>
-                    <strong>Packages:</strong> {Object.keys(pkg.dependencies || {}).length + Object.keys(pkg.devDependencies || {}).length}
-                    <span
-                        className="badge bg-primary ms-2 cursor-pointer"
-                        onClick={() => {
-                            setActiveProject(pkg);
-                        }}
-                    >
-                        View All
-                    </span>
+                <div style={{ fontSize: '0.75rem' }} className="mb-2">
+                    <div><strong>Version:</strong> {pkg?.version || '?'}</div>
+                    <div className="sensitiveMode-blur"><strong>Description:</strong> {pkg?.description || 'No description available'}</div>
+                    <div className="sensitiveMode-blur"><strong>Date:</strong> {new Date(pkg?._mtime)?.toLocaleString()}</div>
+                    <div><strong>Author:</strong> {pkg?.author?.name ? pkg?.author?.name : pkg?.author ? pkg?.author : 'Unknown'}</div>
+                    <div>
+                        <strong>Packages:</strong> {Object.keys(pkg.dependencies || {}).length + Object.keys(pkg.devDependencies || {}).length}
+                        <span
+                            className="badge bg-primary ms-2 cursor-pointer"
+                            onClick={() => {
+                                setActiveProject(pkg);
+                            }}
+                        >
+                            View All
+                        </span>
+                    </div>
                 </div>
 
                 <div className="d-flex">
@@ -150,51 +159,62 @@ export default function ProjectItem({
                         pkg={pkg}
                         version={gulpVersion}
                     />}
+                    {mongoDBVersion && <PackageOverview
+                        name="MongoDB"
+                        pkg={pkg}
+                        version={mongoDBVersion}
+                    />}
                 </div>
 
             </div>
 
-            <Button
-                variant="dark"
-                className='border mt-2'
-                onClick={() => {
-                    console.log("pkg", pkg)
-                }}
-            >
-                <i className="fad fa-terminal me-0"></i>
-            </Button>
-            <Button
-                variant="dark"
-                className='border mt-2'
-                onClick={() => {
-                    fetch(`/api/audit?path=${encodeURIComponent(pkg._folderPath)}`, {
-                        method: 'GET',
-                        // query: {
-                        //     path: pkg._folderPath
-                        // }
-                    }).then(async (res) => {
-                        // const data = await res.json();
-                        // console.log("Audit result for", pkg._folderName, data);
-                        mutateProjects();
-                    })
-                }}
-            >
-                Audit
-            </Button>
-            <Button
-                variant="dark"
-                className='border mt-2'
-                onClick={() => {
-                    fetch(`/api/open-folder?path=${encodeURIComponent(pkg._folderPath)}`, {
-                        method: 'GET',
-                        // query: {
-                        //     path: pkg._folderPath
-                        // }
-                    })
-                }}
-            >
-                Open Folder
-            </Button>
+            <div className="d-flex">
+                <Button
+                    variant="dark"
+                    className='border mt-2'
+                    size="sm"
+                    onClick={() => {
+                        console.log("pkg", pkg)
+                    }}
+                >
+                    <i className="fad fa-terminal me-0"></i>
+                </Button>
+                <Button
+                    variant="dark"
+                    className='border mt-2'
+                    size="sm"
+                    onClick={() => {
+                        fetch(`/api/audit?path=${encodeURIComponent(pkg._folderPath)}`, {
+                            method: 'GET',
+                            // query: {
+                            //     path: pkg._folderPath
+                            // }
+                        }).then(async (res) => {
+                            // const data = await res.json();
+                            // console.log("Audit result for", pkg._folderName, data);
+                            mutateProjects();
+                        })
+                    }}
+                >
+                    Audit
+                </Button>
+                <Button
+                    variant="dark"
+                    className='border mt-2'
+                    size="sm"
+                    onClick={() => {
+                        fetch(`/api/open-folder?path=${encodeURIComponent(pkg._folderPath)}`, {
+                            method: 'GET',
+                            // query: {
+                            //     path: pkg._folderPath
+                            // }
+                        })
+                    }}
+                >
+                    Open Folder
+                </Button>
+            </div>
+
             {pkg?.homepage &&
                 <Button
                     variant="dark"
@@ -229,7 +249,7 @@ export default function ProjectItem({
                     </div>
 
                     {/* Audit Version */}
-                    <div className="mb-1" style={{ fontSize: '0.7rem'}}>
+                    <div className="mb-1" style={{ fontSize: '0.7rem' }}>
                         <span style={{ color: !equalVersion ? 'red' : 'initial' }}><strong>Version Used:</strong> {pkg["project-manager-am-metadata"]?.version_used}</span>
                         {!equalVersion && (
                             <>

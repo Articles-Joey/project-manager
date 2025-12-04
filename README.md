@@ -33,6 +33,7 @@ npm run dev
 - Apply package update commits via GUI
 - Linux Support
 - Audit stats history
+- Swap icons to @mui/icons to eliminate CDN requirement
 
 ## Credits
 
