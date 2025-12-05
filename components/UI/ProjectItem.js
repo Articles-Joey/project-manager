@@ -158,7 +158,7 @@ export default function ProjectItem({
 
     const { mutate: mutateProjects } = useProjects();
 
-    const equalVersion = pkg["project-manager-am-metadata"]?.version_used === packageJson?.version;
+    const equalVersion = pkg["project-manager-details"]?.version_used === packageJson?.version;
 
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
@@ -216,7 +216,7 @@ export default function ProjectItem({
 
             </div>
 
-            <div className="d-flex mt-2">
+            <div className="d-flex flex-wrap mt-2">
 
                 {/* <Button
                     variant="dark"
@@ -249,7 +249,7 @@ export default function ProjectItem({
                     Audit
                 </Button>
 
-                {pkg["project-manager-am-audit-history"] &&
+                {pkg["audit-history"] &&
                     <Button
                         variant="dark"
                         className='border'
@@ -259,25 +259,40 @@ export default function ProjectItem({
                         }}
                     >
                         <i className="fad fa-history"></i>
-                        {pkg["project-manager-am-audit-history"] || 0}
+                        {pkg["audit-history"] || 0}
                     </Button>
                 }
 
-                <Button
-                    variant="dark"
-                    className='border'
-                    size="sm"
-                    onClick={() => {
-                        fetch(`/api/open-folder?path=${encodeURIComponent(pkg._folderPath)}`, {
-                            method: 'GET',
-                            // query: {
-                            //     path: pkg._folderPath
-                            // }
-                        })
-                    }}
+                <OverlayTrigger
+                    placement="top"
+                    overlay={
+                        <Popover id="popover-basic">
+                            <Popover.Header as="h3">Open Folder</Popover.Header>
+                            <Popover.Body
+                                className="py-2"
+                            >
+                                ...
+                            </Popover.Body>
+                        </Popover>
+                    }
                 >
-                    Open Folder
-                </Button>
+                    <Button
+                        variant="dark"
+                        className='border'
+                        size="sm"
+                        onClick={() => {
+                            fetch(`/api/open-folder?path=${encodeURIComponent(pkg._folderPath)}`, {
+                                method: 'GET',
+                                // query: {
+                                //     path: pkg._folderPath
+                                // }
+                            })
+                        }}
+                    >
+                        <i className="fas fa-folder-open"></i>
+                        {/* Open Folder */}
+                    </Button>
+                </OverlayTrigger>
 
                 {/* <Button
                     variant="dark"
@@ -327,11 +342,19 @@ export default function ProjectItem({
                                 },
                             },
                             {
-                                name: 'Log',
+                                name: 'console.log()',
                                 action: () => {
                                     console.log("Project data:", pkg);
                                 },
                             },
+                            ...pkg?.homepage ? [{
+                                name: 'Open Website',
+                                action: () => {
+                                    // console.log("pkg.homepage", pkg.homepage)
+                                    // return
+                                    window.open(pkg.homepage, '_blank');
+                                },
+                            }] : [],
                         ].map((package_obj, i) => {
                             // const isSelected = selectedPackages.includes(package_obj.name);
                             return (
@@ -354,7 +377,7 @@ export default function ProjectItem({
 
                 </Dropdown>
 
-                {pkg?.homepage &&
+                {/* {pkg?.homepage &&
                     <Button
                         variant="dark"
                         className='border'
@@ -366,7 +389,7 @@ export default function ProjectItem({
                     >
                         Website
                     </Button>
-                }
+                } */}
 
             </div>
 
@@ -378,14 +401,14 @@ export default function ProjectItem({
             </div>
 
             {
-                pkg["project-manager-am-metadata"] &&
+                pkg["project-manager-details"] &&
                 <div style={{ marginTop: '10px', fontSize: '0.8em', color: '#888', backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: '5px', borderRadius: '5px' }}>
 
                     <div className=""><strong>Last Audit:</strong>
                         <span className="sensitiveMode-blur">
                             {
-                                pkg["project-manager-am-metadata"]?.last_audit
-                                    ? new Date(pkg["project-manager-am-metadata"]?.last_audit).toLocaleString()
+                                pkg["project-manager-details"]?.last_audit
+                                    ? new Date(pkg["project-manager-details"]?.last_audit).toLocaleString()
                                     : 'N/A'
                             }
                         </span>
@@ -393,7 +416,7 @@ export default function ProjectItem({
 
                     {/* Audit Version */}
                     <div className="mb-1" style={{ fontSize: '0.7rem' }}>
-                        <span style={{ color: !equalVersion ? 'red' : 'initial' }}><strong>Version Used:</strong> {pkg["project-manager-am-metadata"]?.version_used}</span>
+                        <span style={{ color: !equalVersion ? 'red' : 'initial' }}><strong>Version Used:</strong> {pkg["project-manager-details"]?.version_used}</span>
                         {!equalVersion && (
                             <>
                                 <span> | </span>
@@ -402,12 +425,11 @@ export default function ProjectItem({
                         )}
                     </div>
 
-                    <div><strong>Total Alerts Found:</strong> {pkg["project-manager-am-metadata"]?.audit?.vulnerabilities ? Object.keys(pkg["project-manager-am-metadata"]?.audit?.vulnerabilities).length : 0}</div>
-                    <div><strong>Critical Alerts Found</strong> : {pkg["project-manager-am-metadata"]?.audit?.metadata?.vulnerabilities?.critical || 0}</div>
-                    <div><strong>High Alerts Found</strong> : {pkg["project-manager-am-metadata"]?.audit?.metadata?.vulnerabilities?.high || 0}</div>
-                    <div><strong>Moderate Alerts Found</strong> : {pkg["project-manager-am-metadata"]?.audit?.metadata?.vulnerabilities?.moderate || 0}</div>
-                    <div><strong>Low Alerts Found</strong> : {pkg["project-manager-am-metadata"]?.audit?.metadata?.vulnerabilities?.low || 0}</div>
-
+                    <div><strong>Total Alerts Found:</strong> {pkg["project-manager-details"]?.audit?.vulnerabilities ? Object.keys(pkg["project-manager-details"]?.audit?.vulnerabilities).length : 0}</div>
+                    <div><strong>Critical Alerts Found</strong> : {pkg["project-manager-details"]?.audit?.metadata?.vulnerabilities?.critical || 0}</div>
+                    <div><strong>High Alerts Found</strong> : {pkg["project-manager-details"]?.audit?.metadata?.vulnerabilities?.high || 0}</div>
+                    <div><strong>Moderate Alerts Found</strong> : {pkg["project-manager-details"]?.audit?.metadata?.vulnerabilities?.moderate || 0}</div>
+                    <div><strong>Low Alerts Found</strong> : {pkg["project-manager-details"]?.audit?.metadata?.vulnerabilities?.low || 0}</div>
                 </div>
             }
 

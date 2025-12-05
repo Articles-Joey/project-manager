@@ -197,7 +197,7 @@ export default function ProjectsList() {
                                     method: 'POST',
                                     body: JSON.stringify({
                                         projects: packages.map(pkg => pkg._folderPath),
-                                        limit: 2,
+                                        limit: 0,
                                         auditHistory: auditHistory ? true : false,
                                     }),
                                 })
@@ -205,6 +205,7 @@ export default function ProjectsList() {
                                         
                                         const data = res.json();
                                         console.log("Data", data)
+                                        mutateProjects();
 
                                     })
                                     // .then(data => {});
@@ -257,7 +258,7 @@ export default function ProjectsList() {
                 <div className='mb-3'>
 
                     <div className='badge bg-black border'>
-                        Audited {packages?.filter(pkg => pkg["project-manager-am-metadata"])?.length || 0}/{packages?.length || 0} projects.
+                        Audited {packages?.filter(pkg => pkg["project-manager-details"])?.length || 0}/{packages?.length || 0} projects.
                     </div>
 
                     <div className='badge bg-black border'>

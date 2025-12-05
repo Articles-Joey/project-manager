@@ -52,27 +52,27 @@ export async function GET(request) {
             let metadata = null;
             try {
               // Check new location first
-              const metadataPath = path.join(currentPath, dir?.name, 'am_project_manager', 'project-manager-am.json');
+              const metadataPath = path.join(currentPath, dir?.name, 'am_project_manager', 'details.json');
               const metadataContent = await fs.readFile(metadataPath, 'utf-8');
               metadata = JSON.parse(metadataContent);
             } catch (e) {
 
               // TODO Get rid of old location fallback
               // Fallback to old location
-              try {
-                const metadataPath = path.join(currentPath, dir?.name, 'project-manager-am.json');
-                const metadataContent = await fs.readFile(metadataPath, 'utf-8');
-                metadata = JSON.parse(metadataContent);
-              } catch (e2) {
-                // ignore if file doesn't exist in either location
-              }
+              // try {
+              //   const metadataPath = path.join(currentPath, dir?.name, 'details.json');
+              //   const metadataContent = await fs.readFile(metadataPath, 'utf-8');
+              //   metadata = JSON.parse(metadataContent);
+              // } catch (e2) {
+              //   // ignore if file doesn't exist in either location
+              // }
 
             }
 
-            // Try to read project-manager-am-audit-history.json
+            // Try to read audit-history.json
             let auditHistory = null;
             try {
-              const auditHistoryPath = path.join(currentPath, dir?.name,  'am_project_manager', 'project-manager-am-audit-history.json');
+              const auditHistoryPath = path.join(currentPath, dir?.name,  'am_project_manager', 'audit-history.json');
               const auditHistoryContent = await fs.readFile(auditHistoryPath, 'utf-8');
               auditHistory = JSON.parse(auditHistoryContent);
             } catch (e) {
@@ -100,8 +100,8 @@ export async function GET(request) {
             // Add extra info if needed, like the folder path
             projects.push({
               ...packageJson,
-              "project-manager-am-metadata": metadata,
-              "project-manager-am-audit-history": auditHistory?.length,
+              "project-manager-details": metadata,
+              "audit-history": auditHistory?.length,
               _folderPath: path.join(currentPath, dir?.name),
               _folderName: dir?.name,
               _mtime: stats.mtime,

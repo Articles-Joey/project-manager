@@ -215,7 +215,7 @@ export default function SettingsModal({
                                         />
                                     </div>
                                     <div className="small mt-2">
-                                        {`Audit History keeps track of past audits and their results for reference. Stores in a separate file at project-manager-am-audit-history.json.`}
+                                        {`Audit History keeps track of past audits and their results for reference. Stores in a separate file at audit-history.json.`}
                                     </div>
                                 </div>
 

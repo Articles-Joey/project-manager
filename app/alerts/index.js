@@ -15,7 +15,7 @@ export default function Alerts() {
     const alerts = useMemo(() => {
         let allAlerts = [];
         packages.forEach(pkg => {
-            const vulnerabilities = pkg?.["project-manager-am-metadata"]?.audit?.vulnerabilities;
+            const vulnerabilities = pkg?.["project-manager-details"]?.audit?.vulnerabilities;
             if (vulnerabilities) {
                 const vulnsArray = Array.isArray(vulnerabilities)
                     ? vulnerabilities
