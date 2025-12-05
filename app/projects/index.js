@@ -7,10 +7,12 @@ import ProjectItem from '@/components/UI/ProjectItem';
 
 import '@/styles/pages/projects.scss';
 import useProjectSearchStore from '@/components/hooks/useProjectSearchStore';
+import { useStore } from '@/components/hooks/useStore';
 
 export default function ProjectsList() {
 
     const { packages, isLoading, isError, mutate: mutateProjects } = useProjects();
+    const auditHistory = useStore((state) => state.auditHistory);
 
     const searchTerm = useProjectSearchStore((state) => state.searchTerm);
     const setSearchTerm = useProjectSearchStore((state) => state.setSearchTerm);
@@ -102,15 +104,24 @@ export default function ProjectsList() {
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu className="" style={{ maxHeight: '400px', overflowY: 'auto' }}>
-                        <div className="p-2 sticky-top border-bottom">
+                        <div className="d-flex p-2 sticky-top border-bottom">
                             <input
                                 type="text"
                                 placeholder="Search packages..."
-                                className="form-control"
+                                className="form-control form-control-sm"
                                 value={packageSearchTerm}
                                 onChange={(e) => setPackageSearchTerm(e.target.value)}
                                 onClick={(e) => e.stopPropagation()}
                             />
+                            <Button
+                                size='sm'
+                                variant='dark'
+                                onClick={() => {
+                                    setPackageSearchTerm('');
+                                }}
+                            >
+                                <i className="fas fa-eraser"></i>
+                            </Button>
                         </div>
 
                         {uniquePackages.filter(p => p.name.toLowerCase().includes(packageSearchTerm.toLowerCase())).map((package_obj, i) => {
@@ -182,7 +193,21 @@ export default function ProjectsList() {
                             className='border'
                             variant='articles'
                             onClick={() => {
-                                alert("TODO")
+                                fetch('/api/audit/all', { 
+                                    method: 'POST',
+                                    body: JSON.stringify({
+                                        projects: packages.map(pkg => pkg._folderPath),
+                                        limit: 2,
+                                        auditHistory: auditHistory ? true : false,
+                                    }),
+                                })
+                                    .then(res => {
+                                        
+                                        const data = res.json();
+                                        console.log("Data", data)
+
+                                    })
+                                    // .then(data => {});
                             }}
                         >
                             Audit All

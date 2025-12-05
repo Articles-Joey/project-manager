@@ -218,7 +218,7 @@ export default function ProjectItem({
 
             <div className="d-flex mt-2">
 
-                <Button
+                {/* <Button
                     variant="dark"
                     className='border'
                     size="sm"
@@ -227,7 +227,7 @@ export default function ProjectItem({
                     }}
                 >
                     <i className="fad fa-terminal me-0"></i>
-                </Button>
+                </Button> */}
 
                 <Button
                     variant="dark"
@@ -325,7 +325,13 @@ export default function ProjectItem({
 
                                     })
                                 },
-                            }
+                            },
+                            {
+                                name: 'Log',
+                                action: () => {
+                                    console.log("Project data:", pkg);
+                                },
+                            },
                         ].map((package_obj, i) => {
                             // const isSelected = selectedPackages.includes(package_obj.name);
                             return (

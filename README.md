@@ -32,8 +32,9 @@ npm run dev
 - Remote project monitoring
 - Apply package update commits via GUI
 - Linux Support
-- Audit stats history
+- Audit stats history UI
 - Swap icons to @mui/icons to eliminate CDN requirement
+- Deployment UI
 
 ## Credits
 
