@@ -13,6 +13,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Popover from 'react-bootstrap/Popover';
 import { useOsUsername } from '@/components/hooks/useOsUsername';
 import LandingModeSections from '@/components/UI/LandingModeSections';
+import Hero from './Hero';
 
 
 export default function LandingPage() {
@@ -51,20 +52,7 @@ export default function LandingPage() {
                 /> */}
             </div>
 
-            <div className='container'>
-
-                <div className='hero text-center'>
-                    <img
-                        src="img/npm-articles.svg"
-                        height={100}
-                        style={{}}
-                        className='mb-3'
-                    ></img>
-                    <h1 className=''>Node Project Manager</h1>
-                    <p>Not to be confused or affiliated with Node Package Manager (NPM).</p>
-                </div>
-
-            </div>
+            <Hero />
 
             {
                 (process.env.NEXT_PUBLIC_LANDING_MODE == "false" || !process.env.NEXT_PUBLIC_LANDING_MODE)

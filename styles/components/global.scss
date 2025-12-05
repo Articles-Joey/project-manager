@@ -13,11 +13,14 @@ $grid-breakpoints: (
 // Mixin for media-breakpoint-up
 @mixin media-breakpoint-up($name) {
     $min: map.get($grid-breakpoints, $name);
-    @if $min != null and $min != 0 {
+
+    @if $min !=null and $min !=0 {
         @media (min-width: $min) {
             @content;
         }
-    } @else if $min == 0 {
+    }
+
+    @else if $min ==0 {
         @content;
     }
 }
@@ -25,7 +28,8 @@ $grid-breakpoints: (
 // Mixin for media-breakpoint-down
 @mixin media-breakpoint-down($name) {
     $max: map.get($grid-breakpoints, $name);
-    @if $max != null and $max != 0 {
+
+    @if $max !=null and $max !=0 {
         @media (max-width: $max) {
             @content;
         }
@@ -89,4 +93,31 @@ $shadow-articles: 0 0 0 1px rgba(0, 0, 0, 25%), 0 2px 3px rgba(0, 0, 0, 20%);
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.badge {
+    &.badge-hover {
+        opacity: 0.75;
+
+        &:hover {
+            cursor: pointer;
+            opacity: 1;
+        }
+    }
+}
+
+.dropdown-menu {
+    
+    .dropdown-item, a.dropdown-item {
+
+        &.active {
+            background-color: var(--articles-primary);
+            color: black !important;
+
+            span {
+                color: black !important;
+            }
+        }
+    }
+
 }

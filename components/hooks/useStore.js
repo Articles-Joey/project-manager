@@ -18,6 +18,9 @@ export const useStore = create()(
       sensitiveMode: false,
       toggleSensitiveMode: () => set({ sensitiveMode: !get().sensitiveMode }),
 
+      auditHistory: false,
+      toggleAuditHistory: () => set({ auditHistory: !get().auditHistory }),
+
       infoModal: false,
       setInfoModal: (value) => set({ infoModal: value }),
       toggleInfoModal: () => set({ infoModal: !get().infoModal }),
@@ -69,6 +72,7 @@ export const useStore = create()(
         metadataKey: state.metadataKey,
         settingsTab: state.settingsTab,
         sidebar: state.sidebar,
+        auditHistory: state.auditHistory,
       }),
       // storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
     },

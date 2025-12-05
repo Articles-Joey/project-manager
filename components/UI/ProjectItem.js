@@ -1,10 +1,94 @@
-import { Button, OverlayTrigger, Popover } from "react-bootstrap"
+import { Button, Dropdown, OverlayTrigger, Popover, Toast, ToastContainer } from "react-bootstrap"
 import { useStore } from "../hooks/useStore";
 import { useProjects } from "../hooks/useProjects";
+import { useState } from "react";
 
 import packageJson from 'package.json';
 
-function PackageOverview({ name, pkg, version }) {
+function PackagesPreview({ dependencies, devDependencies }) {
+
+    const reactVersion = dependencies?.react || devDependencies?.react || false;
+    const nextVersion = dependencies?.next || devDependencies?.next || false;
+    const expressVersion = dependencies?.express || devDependencies?.express || false;
+    const threeVersion = dependencies?.three || devDependencies?.three || false;
+    const vueVersion = dependencies?.vue || devDependencies?.vue || false;
+    const nuxtVersion = dependencies?.nuxt || devDependencies?.nuxt || false;
+    const socketIoVersion = dependencies?.['socket.io'] || devDependencies?.['socket.io'] || false;
+    const socketIoClientVersion = dependencies?.['socket.io-client'] || devDependencies?.['socket.io-client'] || false;
+    const gulpVersion = dependencies?.gulp || devDependencies?.gulp || false;
+    const mongoDBVersion = dependencies?.mongodb || devDependencies?.mongodb || false;
+
+    return (
+        <div>
+
+            <div className="d-flex">
+                {reactVersion && <PackageOverview
+                    name="React"
+                    packageName="react"
+                    // pkg={pkg}
+                    version={reactVersion}
+                />}
+                {nextVersion && <PackageOverview
+                    name="Next.js"
+                    packageName="next"
+                    // pkg={pkg}
+                    version={nextVersion}
+                />}
+                {expressVersion && <PackageOverview
+                    name="Express"
+                    packageName="express"
+                    // pkg={pkg}
+                    version={expressVersion}
+                />}
+                {threeVersion && <PackageOverview
+                    name="Three.js"
+                    packageName="three"
+                    // pkg={pkg}
+                    version={threeVersion}
+                />}
+                {vueVersion && <PackageOverview
+                    name="Vue"
+                    packageName="vue"
+                    // pkg={pkg}
+                    version={vueVersion}
+                />}
+                {nuxtVersion && <PackageOverview
+                    name="Nuxt"
+                    packageName="nuxt"
+                    // pkg={pkg}
+                    version={nuxtVersion}
+                />}
+                {socketIoVersion && <PackageOverview
+                    name="Socket.IO"
+                    packageName="socket.io"
+                    // pkg={pkg}
+                    version={socketIoVersion}
+                />}
+                {socketIoClientVersion && <PackageOverview
+                    name="Socket.IO Client"
+                    packageName="socket.io-client"
+                    // pkg={pkg}
+                    version={socketIoClientVersion}
+                />}
+                {gulpVersion && <PackageOverview
+                    name="Gulp"
+                    packageName="gulp"
+                    // pkg={pkg}
+                    version={gulpVersion}
+                />}
+                {mongoDBVersion && <PackageOverview
+                    name="MongoDB"
+                    packageName="mongodb"
+                    // pkg={pkg}
+                    version={mongoDBVersion}
+                />}
+            </div>
+
+        </div>
+    )
+}
+
+function PackageOverview({ name, pkg, version, packageName }) {
     return (
         <OverlayTrigger placement="right"
             overlay={
@@ -26,35 +110,40 @@ function PackageOverview({ name, pkg, version }) {
             }
         >
 
-            <div className="border p-1">
-                {name === 'React' &&
-                    <img width={50} height={50} src={'img/package-logos/React.svg'}></img>
-                }
-                {name === 'Next.js' &&
-                    <img width={50} height={50} src={'img/package-logos/Next.js.svg'}></img>
-                }
-                {name === 'Express' &&
-                    <img width={50} height={50} src={'img/package-logos/Express.svg'}></img>
-                }
-                {name === 'Three.js' &&
-                    <img width={50} height={50} src={'img/package-logos/Three.js.svg'}></img>
-                }
-                {name === 'Vue' &&
-                    <img width={50} height={50} src={'img/package-logos/Vue.js.svg'}></img>
-                }
-                {name === 'Nuxt' &&
-                    <img width={50} height={50} src={'img/package-logos/Nuxt.svg'}></img>
-                }
-                {name === 'Socket.IO' &&
-                    <img width={50} height={50} src={'img/package-logos/Socket.IO.svg'}></img>
-                }
-                {name === 'Gulp' &&
-                    <img width={50} height={50} src={'img/package-logos/Gulp.svg'}></img>
-                }
-                {name === 'MongoDB' &&
-                    <img width={50} height={50} src={'img/package-logos/MongoDB.svg'}></img>
-                }
-            </div>
+            <a target="_blank" href={`https://www.npmjs.com/package/${packageName}`}>
+                <div className="border p-1">
+                    {packageName === 'react' &&
+                        <img width={50} height={50} src={'img/package-logos/React.svg'}></img>
+                    }
+                    {packageName === 'next' &&
+                        <img width={50} height={50} src={'img/package-logos/Next.js.svg'}></img>
+                    }
+                    {packageName === 'express' &&
+                        <img width={50} height={50} src={'img/package-logos/Express.svg'}></img>
+                    }
+                    {packageName === 'three' &&
+                        <img width={50} height={50} src={'img/package-logos/Three.js.svg'}></img>
+                    }
+                    {packageName === 'vue' &&
+                        <img width={50} height={50} src={'img/package-logos/Vue.js.svg'}></img>
+                    }
+                    {packageName === 'nuxt' &&
+                        <img width={50} height={50} src={'img/package-logos/Nuxt.svg'}></img>
+                    }
+                    {packageName === 'socket.io' &&
+                        <img width={50} height={50} src={'img/package-logos/Socket.IO.svg'}></img>
+                    }
+                    {packageName === 'socket.io-client' &&
+                        <img width={50} height={50} src={'img/package-logos/Socket.IO.svg'}></img>
+                    }
+                    {packageName === 'gulp' &&
+                        <img width={50} height={50} src={'img/package-logos/Gulp.svg'}></img>
+                    }
+                    {packageName === 'mongodb' &&
+                        <img width={50} height={50} src={'img/package-logos/MongoDB.svg'}></img>
+                    }
+                </div>
+            </a>
 
         </OverlayTrigger>
     )
@@ -64,27 +153,29 @@ export default function ProjectItem({
     package: pkg,
 }) {
 
-    const reactVersion = pkg.dependencies?.react || pkg.devDependencies?.react || false;
-    const nextVersion = pkg.dependencies?.next || pkg.devDependencies?.next || false;
-    const expressVersion = pkg.dependencies?.express || pkg.devDependencies?.express || false;
-    const threeVersion = pkg.dependencies?.three || pkg.devDependencies?.three || false;
-    const vueVersion = pkg.dependencies?.vue || pkg.devDependencies?.vue || false;
-    const nuxtVersion = pkg.dependencies?.nuxt || pkg.devDependencies?.nuxt || false;
-    const socketIoVersion = pkg.dependencies?.['socket.io'] || pkg.devDependencies?.['socket.io'] || false || pkg.dependencies?.['socket.io-client'] || pkg.devDependencies?.['socket.io-client'] || false;
-    const gulpVersion = pkg.dependencies?.gulp || pkg.devDependencies?.gulp || false;
-    const mongoDBVersion = pkg.dependencies?.mongodb || pkg.devDependencies?.mongodb || false;
-
     const setActiveProject = useStore(state => state.setActiveProject);
+    const auditHistory = useStore((state) => state.auditHistory)
 
     const { mutate: mutateProjects } = useProjects();
 
     const equalVersion = pkg["project-manager-am-metadata"]?.version_used === packageJson?.version;
+
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
 
     return (
         <div
             key={pkg._folderPath}
             className="card card-articles border shadow-sm p-3"
         >
+            <ToastContainer position="bottom-end" className="p-3" style={{ zIndex: 2000 }}>
+                <Toast onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide>
+                    <Toast.Header>
+                        <strong className="me-auto">Notification</strong>
+                    </Toast.Header>
+                    <Toast.Body>{toastMessage}</Toast.Body>
+                </Toast>
+            </ToastContainer>
 
             {pkg.thumbnail &&
                 <div className="ratio ratio-16x9 bg-black" style={{ marginBottom: '10px', overflow: 'hidden', borderRadius: '5px' }}>
@@ -118,60 +209,18 @@ export default function ProjectItem({
                     </div>
                 </div>
 
-                <div className="d-flex">
-                    {reactVersion && <PackageOverview
-                        name="React"
-                        pkg={pkg}
-                        version={reactVersion}
-                    />}
-                    {nextVersion && <PackageOverview
-                        name="Next.js"
-                        pkg={pkg}
-                        version={nextVersion}
-                    />}
-                    {expressVersion && <PackageOverview
-                        name="Express"
-                        pkg={pkg}
-                        version={expressVersion}
-                    />}
-                    {threeVersion && <PackageOverview
-                        name="Three.js"
-                        pkg={pkg}
-                        version={threeVersion}
-                    />}
-                    {vueVersion && <PackageOverview
-                        name="Vue"
-                        pkg={pkg}
-                        version={vueVersion}
-                    />}
-                    {nuxtVersion && <PackageOverview
-                        name="Nuxt"
-                        pkg={pkg}
-                        version={nuxtVersion}
-                    />}
-                    {socketIoVersion && <PackageOverview
-                        name="Socket.IO"
-                        pkg={pkg}
-                        version={socketIoVersion}
-                    />}
-                    {gulpVersion && <PackageOverview
-                        name="Gulp"
-                        pkg={pkg}
-                        version={gulpVersion}
-                    />}
-                    {mongoDBVersion && <PackageOverview
-                        name="MongoDB"
-                        pkg={pkg}
-                        version={mongoDBVersion}
-                    />}
-                </div>
+                <PackagesPreview
+                    dependencies={pkg.dependencies}
+                    devDependencies={pkg.devDependencies}
+                />
 
             </div>
 
-            <div className="d-flex">
+            <div className="d-flex mt-2">
+
                 <Button
                     variant="dark"
-                    className='border mt-2'
+                    className='border'
                     size="sm"
                     onClick={() => {
                         console.log("pkg", pkg)
@@ -179,12 +228,13 @@ export default function ProjectItem({
                 >
                     <i className="fad fa-terminal me-0"></i>
                 </Button>
+
                 <Button
                     variant="dark"
-                    className='border mt-2'
+                    className='border'
                     size="sm"
                     onClick={() => {
-                        fetch(`/api/audit?path=${encodeURIComponent(pkg._folderPath)}`, {
+                        fetch(`/api/audit?path=${encodeURIComponent(pkg._folderPath)}&auditHistory=${auditHistory}`, {
                             method: 'GET',
                             // query: {
                             //     path: pkg._folderPath
@@ -198,9 +248,24 @@ export default function ProjectItem({
                 >
                     Audit
                 </Button>
+
+                {pkg["project-manager-am-audit-history"] &&
+                    <Button
+                        variant="dark"
+                        className='border'
+                        size="sm"
+                        onClick={() => {
+                            // TODO : Show audit history in ProjectModal
+                        }}
+                    >
+                        <i className="fad fa-history"></i>
+                        {pkg["project-manager-am-audit-history"] || 0}
+                    </Button>
+                }
+
                 <Button
                     variant="dark"
-                    className='border mt-2'
+                    className='border'
                     size="sm"
                     onClick={() => {
                         fetch(`/api/open-folder?path=${encodeURIComponent(pkg._folderPath)}`, {
@@ -213,20 +278,91 @@ export default function ProjectItem({
                 >
                     Open Folder
                 </Button>
-            </div>
 
-            {pkg?.homepage &&
-                <Button
+                {/* <Button
                     variant="dark"
-                    className='border mt-2'
+                    className='border'
+                    size="sm"
                     onClick={() => {
-                        // console.log("Opening homepage:", pkg.homepage);
-                        window.open(pkg.homepage, '_blank');
+                        fetch(`/api/git-ignore?path=${encodeURIComponent(pkg._folderPath)}`, {
+                            method: 'GET',
+                            // query: {
+                            //     path: pkg._folderPath
+                            // }
+                        })
                     }}
                 >
-                    Website
-                </Button>
-            }
+                    <i className="fas fa-ellipsis-v"></i>
+                </Button> */}
+
+                <Dropdown className="mb-0">
+
+                    <Dropdown.Toggle variant='dark border' size="sm" id="dropdown-basic">
+                        <i className="fas fa-ellipsis-v"></i>
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu className="" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                        {[
+                            {
+                                name: 'Toggle gitignore',
+                                action: () => {
+                                    fetch(`/api/git-ignore?path=${encodeURIComponent(pkg._folderPath)}`, {
+                                        method: 'GET',
+                                    }).then(async (res) => {
+
+                                        const data = await res.json();
+                                        console.log("Gitignore toggled for", data);
+
+                                        if (data.action === "removed") {
+                                            setToastMessage("Removed from .gitignore");
+                                            setShowToast(true);
+                                        }
+
+                                        if (data.action === "added") {
+                                            setToastMessage("Added to .gitignore");
+                                            setShowToast(true);
+                                        }
+
+                                    })
+                                },
+                            }
+                        ].map((package_obj, i) => {
+                            // const isSelected = selectedPackages.includes(package_obj.name);
+                            return (
+                                <Dropdown.Item
+                                    key={`${i}-${package_obj.name}`}
+                                    onClick={(e) => {
+                                        package_obj.action();
+                                    }}
+                                    // active={isSelected}
+                                    className=""
+                                    eventKey={i}
+                                >
+                                    {/* <i className="fad fa-user" aria-hidden="true"></i> */}
+                                    {package_obj.name}
+                                </Dropdown.Item>
+                            )
+                        })}
+
+                    </Dropdown.Menu>
+
+                </Dropdown>
+
+                {pkg?.homepage &&
+                    <Button
+                        variant="dark"
+                        className='border'
+                        size="sm"
+                        onClick={() => {
+                            // console.log("Opening homepage:", pkg.homepage);
+                            window.open(pkg.homepage, '_blank');
+                        }}
+                    >
+                        Website
+                    </Button>
+                }
+
+            </div>
 
             <div
                 className="sensitiveMode-blur"
@@ -235,14 +371,15 @@ export default function ProjectItem({
                 {pkg?._folderPath}
             </div>
 
-            {pkg["project-manager-am-metadata"] &&
+            {
+                pkg["project-manager-am-metadata"] &&
                 <div style={{ marginTop: '10px', fontSize: '0.8em', color: '#888', backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: '5px', borderRadius: '5px' }}>
 
                     <div className=""><strong>Last Audit:</strong>
                         <span className="sensitiveMode-blur">
                             {
-                                pkg["project-manager-am-metadata"]?.audit?.last_audit
-                                    ? new Date(pkg["project-manager-am-metadata"]?.audit?.last_audit).toLocaleString()
+                                pkg["project-manager-am-metadata"]?.last_audit
+                                    ? new Date(pkg["project-manager-am-metadata"]?.last_audit).toLocaleString()
                                     : 'N/A'
                             }
                         </span>
@@ -268,7 +405,7 @@ export default function ProjectItem({
                 </div>
             }
 
-        </div>
+        </div >
     )
 
 }

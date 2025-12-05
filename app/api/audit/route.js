@@ -10,6 +10,7 @@ export async function GET(request) {
 
     const { searchParams } = new URL(request.url);
     const targetPath = searchParams.get('path');
+    const auditHistory = searchParams.get('auditHistory') === 'true';
 
     if (!targetPath) {
         return NextResponse.json({ error: 'Path parameter is required' }, { status: 400 });
@@ -37,17 +38,40 @@ export async function GET(request) {
 
             // Define metadata
             const metadata = {
-                version_used: currentPackage.version,                
+                version_used: currentPackage.version,
                 about: "Metadata used by project-manager.articles.media",
-                audit: {
-                    ...JSON.parse(output),
-                    last_audit: new Date().toISOString(),
-                }
+                last_audit: new Date().toISOString(),
+                audit: JSON.parse(output)
             };
 
-            // Write to project-manager-am.json
-            const metadataPath = path.join(targetPath, 'project-manager-am.json');
+            // Ensure am_project_manager directory exists
+            const amDir = path.join(targetPath, 'am_project_manager');
+            try {
+                await fs.access(amDir);
+            } catch {
+                await fs.mkdir(amDir);
+            }
+
+            // Write to project-manager-am.json inside am_project_manager
+            const metadataPath = path.join(amDir, 'project-manager-am.json');
             await fs.writeFile(metadataPath, JSON.stringify(metadata, null, 2));
+
+            if (auditHistory) {
+                const auditHistoryPath = path.join(amDir, 'project-manager-am-audit-history.json');
+                let auditHistoryData = [];
+                try {
+                    const existingData = await fs.readFile(auditHistoryPath, 'utf-8');
+                    auditHistoryData = JSON.parse(existingData);
+                } catch (readError) {
+                    // File might not exist, which is fine
+                }
+                auditHistoryData.push({
+                    date: new Date().toISOString(),
+                    data: metadata,
+                });
+                await fs.writeFile(auditHistoryPath, JSON.stringify(auditHistoryData, null, 2));
+            }
+
         } catch (metadataError) {
             console.error('Failed to update package metadata:', metadataError);
             // Continue to return audit results even if metadata update fails

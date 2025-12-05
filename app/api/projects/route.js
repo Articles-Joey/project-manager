@@ -41,19 +41,40 @@ export async function GET(request) {
           try {
             // Check if package.json exists
             await fs.access(packageJsonPath);
-            
+
             const stats = await fs.stat(packageJsonPath);
 
             // Read and parse package.json
             const fileContent = await fs.readFile(packageJsonPath, 'utf-8');
             const packageJson = JSON.parse(fileContent);
-            
+
             // Try to read project-manager-am.json
             let metadata = null;
             try {
-              const metadataPath = path.join(currentPath, dir?.name, 'project-manager-am.json');
+              // Check new location first
+              const metadataPath = path.join(currentPath, dir?.name, 'am_project_manager', 'project-manager-am.json');
               const metadataContent = await fs.readFile(metadataPath, 'utf-8');
               metadata = JSON.parse(metadataContent);
+            } catch (e) {
+
+              // TODO Get rid of old location fallback
+              // Fallback to old location
+              try {
+                const metadataPath = path.join(currentPath, dir?.name, 'project-manager-am.json');
+                const metadataContent = await fs.readFile(metadataPath, 'utf-8');
+                metadata = JSON.parse(metadataContent);
+              } catch (e2) {
+                // ignore if file doesn't exist in either location
+              }
+
+            }
+
+            // Try to read project-manager-am-audit-history.json
+            let auditHistory = null;
+            try {
+              const auditHistoryPath = path.join(currentPath, dir?.name,  'am_project_manager', 'project-manager-am-audit-history.json');
+              const auditHistoryContent = await fs.readFile(auditHistoryPath, 'utf-8');
+              auditHistory = JSON.parse(auditHistoryContent);
             } catch (e) {
               // ignore if file doesn't exist
             }
@@ -65,12 +86,12 @@ export async function GET(request) {
               const readmeContent = await fs.readFile(readmePath, 'utf-8');
               const previewMatch = readmeContent.match(/!\[[^\]]*?(?:Game|Site|Preview)[^\]]*?\]\((.*?)\)/i);
               if (previewMatch && previewMatch[1]) {
-                 let imagePath = previewMatch[1];
-                 if (imagePath.startsWith('/') || imagePath.startsWith('\\')) {
-                   imagePath = imagePath.substring(1);
-                 }
-                 const fullPath = path.join(currentPath, dir?.name, imagePath);
-                 thumbnail = `/api/image?path=${encodeURIComponent(fullPath)}`;
+                let imagePath = previewMatch[1];
+                if (imagePath.startsWith('/') || imagePath.startsWith('\\')) {
+                  imagePath = imagePath.substring(1);
+                }
+                const fullPath = path.join(currentPath, dir?.name, imagePath);
+                thumbnail = `/api/image?path=${encodeURIComponent(fullPath)}`;
               }
             } catch (e) {
               // ignore
@@ -80,6 +101,7 @@ export async function GET(request) {
             projects.push({
               ...packageJson,
               "project-manager-am-metadata": metadata,
+              "project-manager-am-audit-history": auditHistory?.length,
               _folderPath: path.join(currentPath, dir?.name),
               _folderName: dir?.name,
               _mtime: stats.mtime,

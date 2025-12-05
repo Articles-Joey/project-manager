@@ -1,0 +1,12 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "append_styles",
+			"type": "shell",
+			"command": "echo \"/* Hero Animation */\n.hero-animation {\n    position: relative;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    height: 5rem; \n    margin-bottom: 1rem;\n\n    .full-text {\n        position: absolute;\n        display: flex;\n        align-items: center;\n        white-space: nowrap;\n        animation: fadeOutFull 0.5s forwards;\n        animation-delay: 2.5s;\n        font-size: 3rem;\n\n        .slide-left {\n            animation: slideInLeft 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;\n            margin-right: 0.5rem;\n            color: var(--articles-primary);\n        }\n        .slide-right {\n            animation: slideInRight 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;\n            margin-left: 0.5rem;\n        }\n    }\n\n    .abbr-text {\n        position: absolute;\n        display: flex;\n        align-items: center;\n        opacity: 0;\n        animation: fadeInAbbr 0.1s forwards;\n        animation-delay: 3s;\n\n        .pop-in {\n            display: inline-block;\n            animation: popIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;\n            animation-delay: 3s;\n            font-size: 3rem;\n            font-weight: 900;\n        }\n        \n        .am {\n             color: var(--articles-primary);\n             margin-right: 1rem;\n        }\n    }\n}\n\n@keyframes slideInLeft {\n    from { transform: translateX(-100vw); opacity: 0; }\n    to { transform: translateX(0); opacity: 1; }\n}\n\n@keyframes slideInRight {\n    from { transform: translateX(100vw); opacity: 0; }\n    to { transform: translateX(0); opacity: 1; }\n}\n\n@keyframes fadeOutFull {\n    to { opacity: 0; visibility: hidden; }\n}\n\n@keyframes fadeInAbbr {\n    to { opacity: 1; }\n}\n\n@keyframes popIn {\n    0% { transform: scale(0); opacity: 0; }\n    60% { transform: scale(1.3); opacity: 1; }\n    100% { transform: scale(1); opacity: 1; }\n}\" >> \"f:\\My Documents\\Sites\\project-manager\\styles\\pages\\landing.scss\"",
+			"args": [],
+			"group": "build"
+		}
+	]
+}

@@ -48,8 +48,11 @@ export default function ProjectModal({
                             <h5>Dependencies</h5>
                             <ul>
                                 {Object.entries(activeProject?.dependencies).map(([name, version]) => (
-                                    <li key={name}>
-                                        {name}: {version}
+                                    <li key={name} className="d-flex mb-1 align-items-center justify-content-between">
+                                        <div>{name}: {version}</div>
+                                        <a target="_blank" href={`https://www.npmjs.com/package/${name}`}>
+                                            <span className="badge bg-black badge-hover ">NPM Link</span>
+                                        </a>
                                     </li>
                                 ))}
                             </ul>
@@ -61,8 +64,11 @@ export default function ProjectModal({
                             <h5>Dev Dependencies</h5>
                             <ul>
                                 {Object.entries(activeProject?.devDependencies).map(([name, version]) => (
-                                    <li key={name}>
-                                        {name}: {version}
+                                    <li key={name} className="d-flex mb-1 align-items-center justify-content-between">
+                                        <div>{name}: {version}</div>
+                                        <a target="_blank" href={`https://www.npmjs.com/package/${name}`}>
+                                            <span className="badge bg-black badge-hover ">NPM Link</span>
+                                        </a>
                                     </li>
                                 ))}
                             </ul>

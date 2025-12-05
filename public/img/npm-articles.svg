@@ -41,9 +41,9 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="0.4668"
-     inkscape:cx="808.69752"
-     inkscape:cy="1817.695"
+     inkscape:zoom="0.2334"
+     inkscape:cx="704.79863"
+     inkscape:cy="1176.0925"
      inkscape:window-width="2560"
      inkscape:window-height="1369"
      inkscape:window-x="-8"
@@ -65,4 +65,18 @@
      xml:space="preserve"
      id="text4"
      style="text-align:start;writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect4);fill:#000000;fill-opacity:1;font-size:120px" />
+  <rect
+     style="fill:#000000"
+     id="rect1"
+     width="1590.5358"
+     height="496.85309"
+     x="505.94186"
+     y="1208.8073" />
+  <rect
+     style="fill:#f9edcd;fill-opacity:1;stroke-width:0.653106"
+     id="rect5"
+     width="182.44757"
+     height="590.77045"
+     x="1898.5837"
+     y="1705.2816" />
 </svg>

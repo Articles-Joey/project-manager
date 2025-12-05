@@ -24,18 +24,6 @@ export default function SettingsModal({
     const setSocketServerHost = useStore((state) => state.setSocketServerHost);
     const reset = useStore((state) => state.reset);
 
-    const controlSettings = useStore((state) => state.controlSettings);
-    const setControlSettings = useStore((state) => state.setControlSettings);
-
-    const audioSettings = useStore((state) => state.audioSettings);
-    const setAudioSettings = useStore((state) => state.setAudioSettings);
-
-    const arcadeMode = useStore((state) => state.arcadeMode);
-    const setArcadeMode = useStore((state) => state.setArcadeMode);
-
-    const toontownMode = useStore((state) => state.toontownMode);
-    const setToontownMode = useStore((state) => state.setToontownMode);
-
     const darkMode = useStore((state) => state.darkMode);
     const toggleDarkMode = useStore((state) => state.toggleDarkMode);
 
@@ -50,6 +38,9 @@ export default function SettingsModal({
 
     const settingsTab = useStore((state) => state.settingsTab)
     const setSettingsTab = useStore((state) => state.setSettingsTab)
+
+    const auditHistory = useStore((state) => state.auditHistory)
+    const toggleAuditHistory = useStore((state) => state.toggleAuditHistory)
 
     return (
         <>
@@ -80,6 +71,7 @@ export default function SettingsModal({
                             'UI',
                             'Folders',
                             'Notifications',
+                            'Audits',
                             'Other'
                         ].map(item =>
                             <ArticlesButton
@@ -206,10 +198,34 @@ export default function SettingsModal({
                             </div>
                         }
 
+                        {settingsTab == 'Audits' &&
+                            <div className="p-3">
+
+                                <div className="mx-3">
+                                    <div className="d-flex align-items-center">
+                                        <Form.Check
+                                            type="switch"
+                                            id="audit-history-switch"
+                                            label="Audit History"
+                                            // value={enabled}
+                                            checked={auditHistory}
+                                            onChange={() => {
+                                                toggleAuditHistory();
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="small mt-2">
+                                        {`Audit History keeps track of past audits and their results for reference. Stores in a separate file at project-manager-am-audit-history.json.`}
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+
                         {settingsTab == 'Other' &&
                             <div className="p-3">
 
-                                <input
+                                {/* <input
                                     type="text"
                                     className="form-control"
                                     placeholder="Metadata Key"
@@ -218,7 +234,7 @@ export default function SettingsModal({
                                         setMetadataKey(e.target.value)
                                     }}
                                 >
-                                </input>
+                                </input> */}
 
                             </div>
                         }
