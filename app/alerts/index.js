@@ -24,6 +24,7 @@ export default function Alerts() {
                 const mappedVulns = vulnsArray.map(v => ({
                     ...v,
                     parent_project: pkg.name || pkg._folderName,
+                    _folderPath: pkg._folderPath,
                     _pkg: pkg
                 }));
                 allAlerts = [...allAlerts, ...mappedVulns];

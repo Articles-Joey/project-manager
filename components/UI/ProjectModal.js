@@ -87,7 +87,7 @@ export default function ProjectModal({
                         <ArticlesButton
                             variant="outline-dark"
                             onClick={() => {
-                                setShow(false)
+                                setActiveProject(null)
                             }}
                         >
                             Close

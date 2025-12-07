@@ -12,6 +12,10 @@ const useProjectSearchStore = create((set, get) => ({
   visibilityFilter: null,
   setVisibilityFilter: (filter) => set({ visibilityFilter: filter }),
 
+  // null || false || true
+  auditFilter: null,
+  setAuditFilter: (filter) => set({ auditFilter: filter }),
+
   selectedPackages: [],
   toggleSelectedPackage: (pkgName) => set((state) => {
     const exists = state.selectedPackages.includes(pkgName);

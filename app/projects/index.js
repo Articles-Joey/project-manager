@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { Button, Dropdown, DropdownButton } from 'react-bootstrap';
+import { useMemo, useState, useEffect } from 'react';
+import { Button, Dropdown, DropdownButton, OverlayTrigger, Popover } from 'react-bootstrap';
 import { useProjects } from '../../components/hooks/useProjects';
 import ProjectItem from '@/components/UI/ProjectItem';
 
@@ -20,9 +20,25 @@ export default function ProjectsList() {
     const setPackageSearchTerm = useProjectSearchStore((state) => state.setPackageSearchTerm);
     const visibilityFilter = useProjectSearchStore((state) => state.visibilityFilter);
     const setVisibilityFilter = useProjectSearchStore((state) => state.setVisibilityFilter);
+    const auditFilter = useProjectSearchStore((state) => state.auditFilter);
+    const setAuditFilter = useProjectSearchStore((state) => state.setAuditFilter);
     const selectedPackages = useProjectSearchStore((state) => state.selectedPackages);
     const toggleSelectedPackage = useProjectSearchStore((state) => state.toggleSelectedPackage);
     const clearSelectedPackages = useProjectSearchStore((state) => state.clearSelectedPackages);
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchParam = urlParams.get('search');
+
+        if (searchParam) {
+            setSearchTerm(searchParam);
+            
+            // Remove the param from URL
+            urlParams.delete('search');
+            const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+            window.history.replaceState({}, '', newUrl);
+        }
+    }, [setSearchTerm]);
 
     const filteredPackages = packages.filter(pkg => {
         const name = pkg?.name || pkg._folderName || '';
@@ -34,6 +50,11 @@ export default function ProjectsList() {
             } else {
                 if (pkg.private !== visibilityFilter) return false;
             }
+        }
+
+        if (auditFilter !== null) {
+            const hasAudit = !!pkg["project-manager-details"];
+            if (auditFilter !== hasAudit) return false;
         }
 
         if (selectedPackages.length > 0) {
@@ -85,6 +106,40 @@ export default function ProjectsList() {
         });
 
         return counts;
+    }, [packages]);
+
+    const auditCounts = useMemo(() => {
+        const counts = {
+            any: packages.length,
+            audited: 0,
+            notAudited: 0
+        };
+
+        packages.forEach(pkg => {
+            if (pkg["project-manager-details"]) {
+                counts.audited++;
+            } else {
+                counts.notAudited++;
+            }
+        });
+
+        return counts;
+    }, [packages]);
+
+    const duplicateNames = useMemo(() => {
+        const nameMap = {};
+        const duplicates = new Set();
+        packages.forEach(pkg => {
+            const name = pkg?.name || pkg._folderName || '';
+            if (name) {
+                if (nameMap[name]) {
+                    duplicates.add(name);
+                } else {
+                    nameMap[name] = true;
+                }
+            }
+        });
+        return Array.from(duplicates);
     }, [packages]);
 
     if (isLoading) return <div>Loading...</div>;
@@ -180,6 +235,37 @@ export default function ProjectsList() {
 
                 </Dropdown>
 
+                <Dropdown className="d-flex w-100 text-center mb-2">
+
+                    <Dropdown.Toggle variant='articles w-100 d-flex justify-content-center align-items-center text-center'>
+                        Audit Status
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu className="" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                        {[
+                            { label: "Any", value: null, count: auditCounts.any },
+                            { label: "Audited", value: true, count: auditCounts.audited },
+                            { label: "Not Audited", value: false, count: auditCounts.notAudited },
+                        ].map((item, i) => {
+                            return (
+                                <Dropdown.Item
+                                    key={`${i}-${item.label}`}
+                                    onClick={() => {
+                                        setAuditFilter(item.value)
+                                    }}
+                                    active={auditFilter === item.value}
+                                    className="d-flex justify-content-between align-items-center"
+                                >
+                                    <span>{item.label}</span>
+                                    <span className="badge bg-articles border text-black ms-2">{item.count}</span>
+                                </Dropdown.Item>
+                            )
+                        })}
+
+                    </Dropdown.Menu>
+
+                </Dropdown>
+
             </div>
 
             <div className='content'>
@@ -193,7 +279,7 @@ export default function ProjectsList() {
                             className='border'
                             variant='articles'
                             onClick={() => {
-                                fetch('/api/audit/all', { 
+                                fetch('/api/audit/all', {
                                     method: 'POST',
                                     body: JSON.stringify({
                                         projects: packages.map(pkg => pkg._folderPath),
@@ -202,13 +288,13 @@ export default function ProjectsList() {
                                     }),
                                 })
                                     .then(res => {
-                                        
+
                                         const data = res.json();
                                         console.log("Data", data)
                                         mutateProjects();
 
                                     })
-                                    // .then(data => {});
+                                // .then(data => {});
                             }}
                         >
                             Audit All
@@ -265,6 +351,36 @@ export default function ProjectsList() {
                         Showing {filteredPackages?.length || 0} of {packages?.length || 0} projects.
                     </div>
 
+                    <OverlayTrigger placement="right"
+                        overlay={
+                            <Popover id="popover-basic">
+                                <Popover.Header as="h3">
+                                    Conflicting Names
+                                </Popover.Header>
+                                <Popover.Body
+                                    className="py-2"
+                                >
+                                    <div className="mb-1">
+                                        <span className='badge bg-warning text-dark'>
+                                            Beta Feature
+                                        </span>
+                                    </div>
+                                    <div>Conflicting names will cause issues when exporting and importing backup data.</div>
+                                    <ul className="mt-2">
+                                        {duplicateNames.map((name, i) => (
+                                            <li key={`${i}-dup-name`}>{name}</li>
+                                        ))}
+                                    </ul>
+                                </Popover.Body>
+                            </Popover>
+                        }
+                    >
+                        <div className='badge bg-black border badge-hover'>
+                            <i className="fa fa-exclamation-triangle me-1"></i>
+                            {duplicateNames?.length || 0} backup errors
+                        </div>
+                    </OverlayTrigger>
+
                     {selectedPackages.length > 0 &&
                         <div
                             className='badge bg-warning text-dark badge-hover border ms-1'
@@ -295,6 +411,17 @@ export default function ProjectsList() {
                         >
                             <i className="fa fa-times me-1"></i>
                             Visibility Filter
+                        </div>
+                    }
+
+                    {auditFilter !== null &&
+                        <div
+                            className='badge bg-warning text-dark badge-hover border ms-1'
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => setAuditFilter(null)}
+                        >
+                            <i className="fa fa-times me-1"></i>
+                            Audit Filter
                         </div>
                     }
 
