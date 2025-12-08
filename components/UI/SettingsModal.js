@@ -7,11 +7,14 @@ import { useStore } from "../hooks/useStore";
 
 import "styles/components/SettingsModal.scss";
 import { set } from "date-fns";
+import { useParentLocation } from "../hooks/useParentLocation";
 
 export default function SettingsModal({
     show,
     setShow,
 }) {
+
+    const { path: parentPath } = useParentLocation();
 
     const [showModal, setShowModal] = useState(true)
 
@@ -134,6 +137,13 @@ export default function SettingsModal({
 
                         {settingsTab == 'Folders' &&
                             <div className="p-3">
+
+                                <div className="mb-3">
+                                    <label className="small mb-0 text-muted form-label">Default Search Directory</label>
+                                    <div className="fw-bold">{parentPath}</div>
+                                </div>
+
+                                <hr />
 
                                 <div className="mb-3">
                                     <label className="form-label">Additional Folder Locations</label>

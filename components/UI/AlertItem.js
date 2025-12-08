@@ -64,6 +64,7 @@ export default function AlertItem({
                     style={{
                         display: 'inline'
                     }}
+                    className="me-1"
                     onClick={(e) => {
                         e.preventDefault();
                         fetch(`/api/open-folder?path=${encodeURIComponent(alert._folderPath)}`, {
