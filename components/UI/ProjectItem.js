@@ -425,11 +425,26 @@ export default function ProjectItem({
                         )}
                     </div>
 
-                    <div><strong>Total Alerts Found:</strong> {pkg["project-manager-details"]?.audit?.vulnerabilities ? Object.keys(pkg["project-manager-details"]?.audit?.vulnerabilities).length : 0}</div>
-                    <div><strong>Critical Alerts Found</strong> : {pkg["project-manager-details"]?.audit?.metadata?.vulnerabilities?.critical || 0}</div>
-                    <div><strong>High Alerts Found</strong> : {pkg["project-manager-details"]?.audit?.metadata?.vulnerabilities?.high || 0}</div>
-                    <div><strong>Moderate Alerts Found</strong> : {pkg["project-manager-details"]?.audit?.metadata?.vulnerabilities?.moderate || 0}</div>
-                    <div><strong>Low Alerts Found</strong> : {pkg["project-manager-details"]?.audit?.metadata?.vulnerabilities?.low || 0}</div>
+                    {
+                        (
+                            pkg["project-manager-details"]?.audit?.vulnerabilities
+                            &&
+                            (Object.keys(pkg["project-manager-details"]?.audit?.vulnerabilities)?.length || 0) > 0
+                        )
+                            ?
+                            <div className={`alert py-1 ${pkg["project-manager-details"]?.audit?.metadata?.vulnerabilities?.critical ? 'alert-danger' : 'alert-warning'}`}>
+                                <div><strong>Total Alerts Found:</strong> {pkg["project-manager-details"]?.audit?.vulnerabilities ? Object.keys(pkg["project-manager-details"]?.audit?.vulnerabilities).length : 0}</div>
+                                <div><strong>Critical Alerts Found</strong> : {pkg["project-manager-details"]?.audit?.metadata?.vulnerabilities?.critical || 0}</div>
+                                <div><strong>High Alerts Found</strong> : {pkg["project-manager-details"]?.audit?.metadata?.vulnerabilities?.high || 0}</div>
+                                <div><strong>Moderate Alerts Found</strong> : {pkg["project-manager-details"]?.audit?.metadata?.vulnerabilities?.moderate || 0}</div>
+                                <div><strong>Low Alerts Found</strong> : {pkg["project-manager-details"]?.audit?.metadata?.vulnerabilities?.low || 0}</div>
+                            </div>
+                            :
+                            <div className="alert alert-success py-1">
+                                <div>No vulnerabilities found.</div>
+                            </div>
+                    }
+
                 </div>
             }
 
