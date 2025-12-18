@@ -1,9 +1,14 @@
-import { Button, Dropdown, OverlayTrigger, Popover, Toast, ToastContainer } from "react-bootstrap"
+import { Accordion, Button, Dropdown, OverlayTrigger, Popover, Toast, ToastContainer } from "react-bootstrap"
 import { useStore } from "../hooks/useStore";
 import { useProjects } from "../hooks/useProjects";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import TextareaAutosize from '@mui/material/TextareaAutosize';
 
 import packageJson from 'package.json';
+import dynamic from 'next/dynamic'
+
+const ArticlesModal = dynamic(() => import('./ArticlesModal'))
 
 function PackagesPreview({ dependencies, devDependencies }) {
 
@@ -163,11 +168,88 @@ export default function ProjectItem({
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
 
+    const [commitPreview, setCommitPreview] = useState(null)
+    const [commitPreviewDiff, setCommitPreviewDiff] = useState(null)
+    const [commitPreviewMessage, setCommitPreviewMessage] = useState("")
+
+    useEffect(() => {
+
+        if (commitPreview) {
+
+            fetch(`/api/git/diff?path=${encodeURIComponent(pkg._folderPath)}`, {
+                method: 'GET',
+            }).then(async (res) => {
+                const data = await res.json();
+                setCommitPreviewDiff(data);
+                console.log("Audit result for", pkg._folderName, data);
+            })
+
+        } else {
+            setCommitPreviewMessage("")
+            setCommitPreviewDiff(null);
+
+        }
+
+    }, [commitPreview]);
+
     return (
         <div
             key={pkg._folderPath}
             className="card card-articles border shadow-sm p-3"
         >
+
+            {commitPreview &&
+                <ArticlesModal
+                    setShow={() => setCommitPreview(null)}
+                    action={() => {
+                        fetch(`/api/git/commit`, {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                folderPath: pkg._folderPath,
+                                message: commitPreviewMessage
+                            }),
+                        }).then(async (res) => {
+                            const data = await res.json();
+                            console.log("Commit result:", data);
+                            setCommitPreview(null)
+                        }).catch((error) => {
+                            console.error("Commit error:", error);
+                        });
+                    }}
+                    title={`Commit Changes to ${pkg.name}`}
+                    actionText={"Commit Changes"}
+                >
+
+                    <div className="mb-3">
+                        {pkg.name}
+                    </div>
+
+                    <div className="mb-4">
+                        <div className="fw-bold">Changed Files:</div>
+                        <pre>{commitPreviewDiff?.output_names}</pre>
+                    </div>
+
+                    <Accordion className="mb-3">
+                        <Accordion.Item eventKey="0">
+                            <Accordion.Header>Raw Output</Accordion.Header>
+                            <Accordion.Body>
+                                <pre>{commitPreviewDiff?.output}</pre>
+                            </Accordion.Body>
+                        </Accordion.Item>
+                    </Accordion>
+
+                    <TextareaAutosize
+                        type="text"
+                        minRows={3}
+                        placeholder="Commit Message"
+                        className="form-control my-2"
+                        value={commitPreviewMessage}
+                        onChange={(e) => setCommitPreviewMessage(e.target.value)}
+                    />
+
+                </ArticlesModal>
+            }
+
             <ToastContainer position="bottom-end" className="p-3" style={{ zIndex: 2000 }}>
                 <Toast onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide>
                     <Toast.Header>
@@ -299,7 +381,7 @@ export default function ProjectItem({
                     className='border'
                     size="sm"
                     onClick={() => {
-                        fetch(`/api/git-ignore?path=${encodeURIComponent(pkg._folderPath)}`, {
+                        fetch(`/api/git/ignore?path=${encodeURIComponent(pkg._folderPath)}`, {
                             method: 'GET',
                             // query: {
                             //     path: pkg._folderPath
@@ -321,7 +403,7 @@ export default function ProjectItem({
                             {
                                 name: 'Toggle gitignore',
                                 action: () => {
-                                    fetch(`/api/git-ignore?path=${encodeURIComponent(pkg._folderPath)}`, {
+                                    fetch(`/api/git/ignore?path=${encodeURIComponent(pkg._folderPath)}`, {
                                         method: 'GET',
                                     }).then(async (res) => {
 
@@ -345,6 +427,52 @@ export default function ProjectItem({
                                 name: 'console.log()',
                                 action: () => {
                                     console.log("Project data:", pkg);
+                                },
+                            },
+                            {
+                                name: 'Log Diff',
+                                action: () => {
+                                    fetch(`/api/git/diff?path=${encodeURIComponent(pkg._folderPath)}`, {
+                                        method: 'GET',
+                                    }).then(async (res) => {
+                                        const data = await res.json();
+                                        console.log("Audit result for", pkg._folderName, data);
+                                    })
+                                },
+                            },
+                            {
+                                name: 'Audit Fix',
+                                action: () => {
+                                    fetch(`/api/audit?path=${encodeURIComponent(pkg._folderPath)}&auditHistory=${auditHistory}&fix=true`, {
+                                        method: 'GET',
+                                        // query: {
+                                        //     path: pkg._folderPath
+                                        // }
+                                    }).then(async (res) => {
+                                        // const data = await res.json();
+                                        // console.log("Audit result for", pkg._folderName, data);
+                                        // mutateProjects();
+
+                                        // TODO - npm audit fix responds with the new audit results after fixing, so in the future save this on the backend to avoid re-fetching
+
+                                        fetch(`/api/audit?path=${encodeURIComponent(pkg._folderPath)}&auditHistory=${auditHistory}`, {
+                                            method: 'GET',
+                                            // query: {
+                                            //     path: pkg._folderPath
+                                            // }
+                                        }).then(async (res) => {
+                                            // const data = await res.json();
+                                            // console.log("Audit result for", pkg._folderName, data);
+                                            mutateProjects();
+                                        })
+
+                                    })
+                                },
+                            },
+                            {
+                                name: 'Push Commit',
+                                action: () => {
+                                    setCommitPreview(pkg)
                                 },
                             },
                             ...pkg?.homepage ? [{

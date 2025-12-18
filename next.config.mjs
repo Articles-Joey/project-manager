@@ -5,6 +5,7 @@ const nextConfig = {
     // compiler: {
     //     removeConsole: process.env.NODE_ENV === 'production',
     // },
+    reactCompiler: true,
     images: {
         // domains: ['cdn.articles.media', 'articles-website.s3.amazonaws.com', 'd3bzp9rk94ifwy.cloudfront.net'],
         remotePatterns: [

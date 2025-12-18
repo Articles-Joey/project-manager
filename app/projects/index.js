@@ -27,18 +27,30 @@ export default function ProjectsList() {
     const clearSelectedPackages = useProjectSearchStore((state) => state.clearSelectedPackages);
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const searchParam = urlParams.get('search');
 
-        if (searchParam) {
-            setSearchTerm(searchParam);
-            
-            // Remove the param from URL
-            urlParams.delete('search');
-            const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
-            window.history.replaceState({}, '', newUrl);
+        // const urlParams = new URLSearchParams(window.location.search);
+        // const searchParam = urlParams.get('search');
+
+        // if (searchParam) {
+        //     setSearchTerm(searchParam);
+
+        //     // Remove the param from URL
+        //     urlParams.delete('search');
+        //     const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+        //     window.history.replaceState({}, '', newUrl);
+        // }        
+
+    }, []);
+
+    useEffect(() => {
+        const url = new URL(window.location);
+        if (searchTerm) {
+            url.searchParams.set('search', searchTerm);
+        } else {
+            url.searchParams.delete('search');
         }
-    }, [setSearchTerm]);
+        window.history.replaceState({}, '', url);
+    }, [searchTerm]);
 
     const filteredPackages = packages.filter(pkg => {
         const name = pkg?.name || pkg._folderName || '';
