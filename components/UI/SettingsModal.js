@@ -91,10 +91,10 @@ export default function SettingsModal({
 
                     <hr className="my-0" />
 
-                    <div className="p-2">
+                    <div className="">
 
                         {settingsTab == 'UI' &&
-                            <div className="mx-4 pt-3">
+                            <div className="p-3">
 
                                 <div className="mb-3">
                                     <div className="d-flex align-items-center">
@@ -211,7 +211,7 @@ export default function SettingsModal({
                         {settingsTab == 'Audits' &&
                             <div className="p-3">
 
-                                <div className="mx-3">
+                                <div className="">
                                     <div className="d-flex align-items-center">
                                         <Form.Check
                                             type="switch"

@@ -7,8 +7,10 @@ An easier way to manage and view all your NPM projects.
 ## Features
 
 - GUI to manage all your projects that are using NPM
-- Audit packages easier
+- Project image & metadata previews
+- Bulk audit & fix packages easier
 - Easily identify vulnerabilities
+- Make commits to your projects
 
 ## Getting Started
 
@@ -35,6 +37,7 @@ npm run dev
 - Audit stats history UI
 - Swap icons to @mui/icons to eliminate CDN requirement
 - Deployment UI
+- SEO Audit tool. Scan projects with a homepage.
 
 ## Credits
 

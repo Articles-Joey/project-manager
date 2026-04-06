@@ -16,7 +16,10 @@ export async function POST(req) {
     }
 
     // Escape double quotes in the message to prevent shell injection/errors
-    const safeMessage = message.replace(/"/g, '\\"');
+    // const safeMessage = message.replace(/"/g, '\\"');
+
+    // TODO - Test to see how this handles new lines in commit messages
+    const safeMessage = message.replace(/"/g, '\\"').replace(/\r?\n/g, ' ');
 
     // Chain commands: add all changes, commit with message, and push
     const command = `git add . && git commit -m "${safeMessage}" && git push`;

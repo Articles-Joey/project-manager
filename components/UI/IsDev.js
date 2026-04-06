@@ -5,8 +5,8 @@ import { useState, useEffect } from 'react';
 // import { togglePrivacyMode } from "@/redux/actions/siteActions";
 import ArticlesButton from '@/components/UI/Button';
 
-import useUserDetails from '@/components/hooks/user/useUserDetails';
-import useUserToken from '@/components/hooks/user/useUserToken';
+// import useUserDetails from '@/components/hooks/user/useUserDetails';
+// import useUserToken from '@/components/hooks/user/useUserToken';
 
 export default function IsDev({className, noOutline, children, inline}) {
 
@@ -14,21 +14,23 @@ export default function IsDev({className, noOutline, children, inline}) {
     // const userReduxState = useSelector((state) => state.auth.user_details)
     // const userReduxState = false
 
-    const {
-        data: userToken,
-        error: userTokenError,
-        isLoading: userTokenLoading,
-        mutate: userTokenMutate
-    } = useUserToken();
+    // const {
+    //     data: userToken,
+    //     error: userTokenError,
+    //     isLoading: userTokenLoading,
+    //     mutate: userTokenMutate
+    // } = useUserToken();
 
-    const {
-        data: userDetails,
-        error: userDetailsError,
-        isLoading: userDetailsLoading,
-        mutate: userDetailsMutate
-    } = useUserDetails({
-        token: userToken
-    });
+    // const {
+    //     data: userDetails,
+    //     error: userDetailsError,
+    //     isLoading: userDetailsLoading,
+    //     mutate: userDetailsMutate
+    // } = useUserDetails({
+    //     token: userToken
+    // });
+
+    const userDetails = false
 
     const [ isMounted, setIsMounted ] = useState()
     useEffect(() => {

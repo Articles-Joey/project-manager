@@ -22,6 +22,10 @@ export default function ProjectsList() {
     const setVisibilityFilter = useProjectSearchStore((state) => state.setVisibilityFilter);
     const auditFilter = useProjectSearchStore((state) => state.auditFilter);
     const setAuditFilter = useProjectSearchStore((state) => state.setAuditFilter);
+    const vulnerabilityFilter = useProjectSearchStore((state) => state.vulnerabilityFilter);
+    const setVulnerabilityFilter = useProjectSearchStore((state) => state.setVulnerabilityFilter);
+    const lastAuditFilter = useProjectSearchStore((state) => state.lastAuditFilter);
+    const setLastAuditFilter = useProjectSearchStore((state) => state.setLastAuditFilter);
     const selectedPackages = useProjectSearchStore((state) => state.selectedPackages);
     const toggleSelectedPackage = useProjectSearchStore((state) => state.toggleSelectedPackage);
     const clearSelectedPackages = useProjectSearchStore((state) => state.clearSelectedPackages);
@@ -67,6 +71,34 @@ export default function ProjectsList() {
         if (auditFilter !== null) {
             const hasAudit = !!pkg["project-manager-details"];
             if (auditFilter !== hasAudit) return false;
+        }
+
+        if (vulnerabilityFilter !== null) {
+            const vulnMeta = pkg["project-manager-details"]?.audit?.metadata?.vulnerabilities;
+            const vulnKeys = pkg["project-manager-details"]?.audit?.vulnerabilities;
+            const totalVulns = vulnKeys ? Object.keys(vulnKeys).length : 0;
+            if (vulnerabilityFilter === 'none') {
+                if (totalVulns !== 0) return false;
+            } else if (vulnerabilityFilter === 'any') {
+                if (totalVulns === 0) return false;
+            } else {
+                // low | moderate | high | critical
+                if (!vulnMeta || !vulnMeta[vulnerabilityFilter]) return false;
+            }
+        }
+
+        if (lastAuditFilter !== null) {
+            const lastAudit = pkg["project-manager-details"]?.last_audit;
+            if (!lastAudit) return false;
+            const auditDate = new Date(lastAudit);
+            const now = new Date();
+            const msAgo = now - auditDate;
+            const msThresholds = {
+                '1week': 7 * 24 * 60 * 60 * 1000,
+                '1month': 30 * 24 * 60 * 60 * 1000,
+                '1year': 365 * 24 * 60 * 60 * 1000,
+            };
+            if (msAgo <= msThresholds[lastAuditFilter]) return false;
         }
 
         if (selectedPackages.length > 0) {
@@ -132,6 +164,49 @@ export default function ProjectsList() {
                 counts.audited++;
             } else {
                 counts.notAudited++;
+            }
+        });
+
+        return counts;
+    }, [packages]);
+
+    const lastAuditCounts = useMemo(() => {
+        const now = new Date();
+        const ms = {
+            '1week': 7 * 24 * 60 * 60 * 1000,
+            '1month': 30 * 24 * 60 * 60 * 1000,
+            '1year': 365 * 24 * 60 * 60 * 1000,
+        };
+        const counts = { '1week': 0, '1month': 0, '1year': 0 };
+
+        packages.forEach(pkg => {
+            const lastAudit = pkg["project-manager-details"]?.last_audit;
+            if (!lastAudit) return;
+            const msAgo = now - new Date(lastAudit);
+            if (msAgo > ms['1week']) counts['1week']++;
+            if (msAgo > ms['1month']) counts['1month']++;
+            if (msAgo > ms['1year']) counts['1year']++;
+        });
+
+        return counts;
+    }, [packages]);
+
+    const vulnerabilityCounts = useMemo(() => {
+        const counts = { any: packages.length, none: 0, hasAny: 0, low: 0, moderate: 0, high: 0, critical: 0 };
+
+        packages.forEach(pkg => {
+            const vulnMeta = pkg["project-manager-details"]?.audit?.metadata?.vulnerabilities;
+            const vulnKeys = pkg["project-manager-details"]?.audit?.vulnerabilities;
+            const totalVulns = vulnKeys ? Object.keys(vulnKeys).length : 0;
+
+            if (totalVulns === 0) {
+                counts.none++;
+            } else {
+                counts.hasAny++;
+                if (vulnMeta?.low) counts.low++;
+                if (vulnMeta?.moderate) counts.moderate++;
+                if (vulnMeta?.high) counts.high++;
+                if (vulnMeta?.critical) counts.critical++;
             }
         });
 
@@ -273,6 +348,67 @@ export default function ProjectsList() {
                                 </Dropdown.Item>
                             )
                         })}
+
+                    </Dropdown.Menu>
+
+                </Dropdown>
+
+                <Dropdown className="d-flex w-100 text-center mb-2">
+
+                    <Dropdown.Toggle variant='articles w-100 d-flex justify-content-center align-items-center text-center'>
+                        Vulnerabilities
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu className="" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                        {[
+                            { label: "Any", value: null, count: vulnerabilityCounts.any },
+                            { label: "No Vulnerabilities", value: 'none', count: vulnerabilityCounts.none },
+                            { label: "Has Vulnerabilities", value: 'any', count: vulnerabilityCounts.hasAny },
+                            { label: "Low", value: 'low', count: vulnerabilityCounts.low },
+                            { label: "Moderate", value: 'moderate', count: vulnerabilityCounts.moderate },
+                            { label: "High", value: 'high', count: vulnerabilityCounts.high },
+                            { label: "Critical", value: 'critical', count: vulnerabilityCounts.critical },
+                        ].map((item, i) => (
+                            <Dropdown.Item
+                                key={`${i}-${item.label}`}
+                                onClick={() => setVulnerabilityFilter(item.value)}
+                                active={vulnerabilityFilter === item.value}
+                                className="d-flex justify-content-between align-items-center"
+                            >
+                                <span>{item.label}</span>
+                                <span className="badge bg-articles border text-black ms-2">{item.count}</span>
+                            </Dropdown.Item>
+                        ))}
+
+                    </Dropdown.Menu>
+
+                </Dropdown>
+
+                <Dropdown className="d-flex w-100 text-center mb-2">
+
+                    <Dropdown.Toggle variant='articles w-100 d-flex justify-content-center align-items-center text-center'>
+                        Last Audit Age
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu className="" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                        {[
+                            { label: "Any", value: null, count: null },
+                            { label: "> 1 Week", value: '1week', count: lastAuditCounts['1week'] },
+                            { label: "> 1 Month", value: '1month', count: lastAuditCounts['1month'] },
+                            { label: "> 1 Year", value: '1year', count: lastAuditCounts['1year'] },
+                        ].map((item, i) => (
+                            <Dropdown.Item
+                                key={`${i}-${item.label}`}
+                                onClick={() => setLastAuditFilter(item.value)}
+                                active={lastAuditFilter === item.value}
+                                className="d-flex justify-content-between align-items-center"
+                            >
+                                <span>{item.label}</span>
+                                {item.count !== null && (
+                                    <span className="badge bg-articles border text-black ms-2">{item.count}</span>
+                                )}
+                            </Dropdown.Item>
+                        ))}
 
                     </Dropdown.Menu>
 
