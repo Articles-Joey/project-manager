@@ -243,6 +243,9 @@ export default function ProjectsList() {
 
                     <Dropdown.Toggle variant='articles w-100 d-flex justify-content-center align-items-center text-center'>
                         Packages
+                        {selectedPackages.length > 0 && (
+                            <span className="badge bg-warning text-dark ms-2">{selectedPackages.length}</span>
+                        )}
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu className="" style={{ maxHeight: '400px', overflowY: 'auto' }}>
@@ -294,6 +297,11 @@ export default function ProjectsList() {
 
                     <Dropdown.Toggle variant='articles w-100 d-flex justify-content-center align-items-center text-center'>
                         Visibility
+                        {visibilityFilter !== null && (
+                            <span className="badge bg-warning text-dark ms-2">
+                                {visibilityFilter === 'unset' ? 'Unset' : visibilityFilter ? 'Private' : 'Public'}
+                            </span>
+                        )}
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu className="" style={{ maxHeight: '400px', overflowY: 'auto' }}>
@@ -326,6 +334,11 @@ export default function ProjectsList() {
 
                     <Dropdown.Toggle variant='articles w-100 d-flex justify-content-center align-items-center text-center'>
                         Audit Status
+                        {auditFilter !== null && (
+                            <span className="badge bg-warning text-dark ms-2">
+                                {auditFilter ? 'Audited' : 'Not Audited'}
+                            </span>
+                        )}
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu className="" style={{ maxHeight: '400px', overflowY: 'auto' }}>
@@ -357,6 +370,11 @@ export default function ProjectsList() {
 
                     <Dropdown.Toggle variant='articles w-100 d-flex justify-content-center align-items-center text-center'>
                         Vulnerabilities
+                        {vulnerabilityFilter !== null && (
+                            <span className="badge bg-warning text-dark ms-2">
+                                {vulnerabilityFilter === 'none' ? 'None' : vulnerabilityFilter === 'any' ? 'Has' : vulnerabilityFilter.charAt(0).toUpperCase() + vulnerabilityFilter.slice(1)}
+                            </span>
+                        )}
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu className="" style={{ maxHeight: '400px', overflowY: 'auto' }}>
@@ -388,6 +406,11 @@ export default function ProjectsList() {
 
                     <Dropdown.Toggle variant='articles w-100 d-flex justify-content-center align-items-center text-center'>
                         Last Audit Age
+                        {lastAuditFilter !== null && (
+                            <span className="badge bg-warning text-dark ms-2">
+                                {lastAuditFilter === '1week' ? '> 1 Week' : lastAuditFilter === '1month' ? '> 1 Month' : '> 1 Year'}
+                            </span>
+                        )}
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu className="" style={{ maxHeight: '400px', overflowY: 'auto' }}>
@@ -570,6 +593,28 @@ export default function ProjectsList() {
                         >
                             <i className="fa fa-times me-1"></i>
                             Audit Filter
+                        </div>
+                    }
+
+                    {vulnerabilityFilter !== null &&
+                        <div
+                            className='badge bg-warning text-dark badge-hover border ms-1'
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => setVulnerabilityFilter(null)}
+                        >
+                            <i className="fa fa-times me-1"></i>
+                            Vulnerability Filter
+                        </div>
+                    }
+
+                    {lastAuditFilter !== null &&
+                        <div
+                            className='badge bg-warning text-dark badge-hover border ms-1'
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => setLastAuditFilter(null)}
+                        >
+                            <i className="fa fa-times me-1"></i>
+                            Last Audit Filter
                         </div>
                     }
 
