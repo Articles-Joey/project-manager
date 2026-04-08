@@ -45,4 +45,4 @@ Lead Developer - [Articles-Joey](https://github.com/Articles-Joey)
 
 ## Sponsors
 
-[Articles Media](https://articles.media) - ...
+[Articles Media](https://articles.media) - Hosting and development support

@@ -1,7 +1,9 @@
 {
   "name": "am-project-manager",
   "description": "A project browser and manager for your apps using npm.",
-  "version": "0.0.5",
+  "version": "0.0.6",
+  "audit_version": "0.0.4",
+  "audit_version_comment": "Used to flag when more features are added to the audit results, so that users know they need to re-audit to get the new features.",
   "private": false,
   "engines": {
     "node": "24"

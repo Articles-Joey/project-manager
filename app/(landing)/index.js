@@ -134,6 +134,37 @@ export default function LandingPage() {
                                 </Link>
                             </OverlayTrigger>
 
+                            <OverlayTrigger placement="right"
+                                overlay={
+                                    <Popover id="popover-basic">
+                                        <Popover.Header as="h3">Alerts Page</Popover.Header>
+                                        <Popover.Body
+                                            className="py-2"
+                                        >
+                                            {/* <div className="mb-1">
+                                            <span className='badge bg-success'>
+                                                No login required.
+                                            </span>
+                                        </div> */}
+                                            Separate interface to view all alerts across your projects.
+                                        </Popover.Body>
+                                    </Popover>
+                                }
+                            >
+                                <Link href="/about-landing">
+                                    <ArticlesButton
+                                        className={`w-100 mb-2`}
+                                        small
+                                        onClick={() => {
+
+                                        }}
+                                    >
+                                        <i className='fad fa-link'></i>
+                                        View About
+                                    </ArticlesButton>
+                                </Link>
+                            </OverlayTrigger>
+
                         </div>
 
                         <div className="card-footer d-flex flex-wrap justify-content-center">

@@ -1,0 +1,25 @@
+.about-landing-page {
+    display: flex;
+
+    .side-menu {
+        height: calc(100vh - 50px);
+        width: 300px;
+        border-right: 1px solid #ccc;
+        padding: 20px;
+        position: sticky;
+        top: 50px;
+        left: 0;
+        // position: relative;
+        display: none;
+
+        @media (min-width: 992px) {
+            display: block;
+        }
+    }
+
+    .content {
+        flex: 1;
+        padding: 20px;
+    }
+
+}

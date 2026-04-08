@@ -163,7 +163,7 @@ export default function ProjectItem({
 
     const { mutate: mutateProjects } = useProjects();
 
-    const equalVersion = pkg["project-manager-details"]?.version_used === packageJson?.version;
+    const equalVersion = pkg["project-manager-details"]?.version_used === packageJson?.audit_version;
 
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
@@ -548,7 +548,7 @@ export default function ProjectItem({
                         {!equalVersion && (
                             <>
                                 <span> | </span>
-                                <strong>Current Version:</strong> {packageJson?.version}
+                                <strong>Current Version:</strong> {packageJson?.audit_version}
                             </>
                         )}
                     </div>
