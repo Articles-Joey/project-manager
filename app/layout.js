@@ -69,7 +69,7 @@ export default function RootLayout({ children }) {
 
         {process.env.NEXT_PUBLIC_CDN && <link
           rel="stylesheet"
-          href={`${process.env.NEXT_PUBLIC_CDN}fonts/fontawsome/css/all.min.css`}
+          href={`${process.env.NEXT_PUBLIC_CDN}fonts/fontawesome/css/all.min.css`}
         />}
 
       </head>
