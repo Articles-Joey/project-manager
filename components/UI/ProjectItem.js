@@ -376,6 +376,37 @@ export default function ProjectItem({
                     </Button>
                 </OverlayTrigger>
 
+                <OverlayTrigger
+                    placement="top"
+                    overlay={
+                        <Popover id="popover-basic">
+                            <Popover.Header as="h3">Open Code</Popover.Header>
+                            <Popover.Body
+                                className="py-2"
+                            >
+                                ...
+                            </Popover.Body>
+                        </Popover>
+                    }
+                >
+                    <Button
+                        variant="dark"
+                        className='border'
+                        size="sm"
+                        onClick={() => {
+                            fetch(`/api/open-code?path=${encodeURIComponent(pkg._folderPath)}`, {
+                                method: 'GET',
+                                // query: {
+                                //     path: pkg._folderPath
+                                // }
+                            })
+                        }}
+                    >
+                        <i className="fas fa-code"></i>
+                        {/* Open Code */}
+                    </Button>
+                </OverlayTrigger>
+
                 {/* <Button
                     variant="dark"
                     className='border'

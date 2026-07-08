@@ -18,25 +18,25 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@mui/icons-material": "^7.3.9",
-    "@mui/material": "^7.3.9",
-    "@mui/material-nextjs": "^7.3.9",
+    "@mui/icons-material": "^9.2.0",
+    "@mui/material": "^9.2.0",
+    "@mui/material-nextjs": "^9.1.1",
     "bootstrap": "^5.3.8",
     "classnames": "^2.5.1",
     "date-fns": "^4.1.0",
-    "next": "^16.2.2",
+    "next": "^16.2.10",
     "react": "^19.2.4",
     "react-bootstrap": "^2.10.10",
-    "react-dom": "^19.2.4",
+    "react-dom": "^19.2.7",
     "react-hotkeys-hook": "^5.1.0",
-    "sass": "^1.97.3",
-    "swr": "^2.4.1",
-    "zustand": "^5.0.12"
+    "sass": "^1.101.0",
+    "swr": "^2.4.2",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.4",
     "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^10.0.2",
-    "eslint-config-next": "^16.2.2"
+    "eslint-config-next": "^16.2.10"
   }
 }
